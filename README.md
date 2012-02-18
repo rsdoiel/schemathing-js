@@ -15,9 +15,9 @@ A +Thing+ object might have the following methods --
 ++ _an object_ (optional) E.g. A mongo object id.
 * clone() - creates a copy of itself into a new thing but with a new object_id.
 ++ _object_id_ (optional)
-* is() - without an argument it returns a string of it's type. With a string parameter it will return true if it is the same type or inherits from that type
+* is() - checks if an object is of the same type or is a decendant type. Without an argument it returns a string of it's type. With a string parameter it will return true if it is the same type or inherits from that type
 ++ _type_name_ (optional) if type_name matches return true, otherwise false
-* strictIs() - same as strict but will not match against parent types
+* strictIs() - same as is() strict but will not match against parent types
 * equal() - Check to see if properties in common are equal (==).
 ++ _an object_ (required)
 * strictEqual() - Check to see if common properties are strickly equal (===).
