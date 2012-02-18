@@ -1,4 +1,4 @@
-thing-js
+schemathing-js
 ========
 0.0.0-experiment
 ----------------
@@ -42,7 +42,7 @@ The grand idea for this module would provide support for all the schema types de
 # A theoretical example using the module
 
     var assert = require('assert'),
-    	schema = require('thing');
+    	schema = require('schemathing');
     
     // Dummy Object id objects and functions
     var ObjectIds = { _id: 0 },
