@@ -1,0 +1,30 @@
+{
+	"name" : "thing",
+	"version" : "0.0.0-experiment",
+	"description" : "thing-js is an experiment in implementing an set of javascript object that map to and from the microformats defined at schema.org.",
+	"main" : "./thing.js",
+	"repository" : { 
+		"type" : "git", 
+		"url" : "http://github.com/rsdoiel/thing-js.git"
+	},
+	"dependencies" : {},
+	"author" : {
+		"name" : "R. S. Doiel", 
+		"email" : "rsdoiel@gmail.com", 
+		"url" : "https://github.com/rsdoiel"
+	},
+	"maintainers" : [{
+		"name" : "R. S. Doiel", 
+		"url" : "https://github.com/rsdoiel"
+	}],
+	"engines" : {
+		"node" : ">= 0.6",
+		"npm" : ">= 1"
+	},
+	"scripts": {
+		"test": "node js/thing_test.js"
+	},
+	"bugs": {
+		"url": "http://github.com/rsdoiel/thing-js/issues"
+	}
+}
