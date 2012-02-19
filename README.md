@@ -5,7 +5,7 @@ schemathing-js
 
 # Overview
 
-thing-js is an experiment in implementing an set of javascript object that map to and from the microformats defined at schema.org.
+schemathing-js is an experiment in implementing an set of javascript object that map to and from the microformats defined at schema.org.
 
 # A example Thing
 
@@ -15,12 +15,12 @@ A +Thing+ object might have the following methods --
 ++ _an object_ (optional) E.g. A mongo object id.
 * clone() - creates a copy of itself into a new thing but with a new object_id.
 ++ _object_id_ (optional)
-* is() - checks if an object is of the same type or is a decendant type. Without an argument it returns a string of it's type. With a string parameter it will return true if it is the same type or inherits from that type
+* is() - checks if an object is of the same type or is a descendant type. Without an argument it returns a string of it's type. With a string parameter it will return true if it is the same type or inherits from that type
 ++ _type_name_ (optional) if type_name matches return true, otherwise false
 * strictIs() - same as is() strict but will not match against parent types
 * equal() - Check to see if properties in common are equal (==).
 ++ _an object_ (required)
-* strictEqual() - Check to see if common properties are strickly equal (===).
+* strictEqual() - Check to see if common properties are strictly equal (===).
 ++ _an object_ (required)
 * notEqual() - Check to see if properties in common are not equal (!=); returns true of false.
 ++ _an object_ (required)
@@ -34,12 +34,12 @@ A +Thing+ object might have the following methods --
 * strictDiff() - Given another object return an object with fields not in common or strict not equal (===).
 ++ _an object_ (require)
 * toHtml() - return the thing object as a schema.org defined markup html block. Object's id would map to the id attribute in the outer tag.
-* toJSON() - render as json
+* toJSON() - render as JSON
 * toSource() - render as JavaScript including it's functions
 
 The grand idea for this module would provide support for all the schema types defined at schema.org with a consistent set of methods and attributes.
 
-# A theoretical example using the module
+# A theoretical example using the module in NodeJS
 
     var assert = require('assert'),
     	schema = require('schemathing');
