@@ -31,9 +31,14 @@ A +Thing+ object might have the following methods --
 ++ _an object_ (required)
 * notStrictEqual() - Check to see if properties in common are strictly not equal (!==); returns true or false.
 ++ _an object_ (required)
-* absorb() - absorb another object's properties except _id
+
+## transformation functions
+
+* update() - replace common properties from another object (except _id)
 ++ _an object_ (required)
-* morph() - absorb another's properties' values, except _id, dropping any properties that doesn't exist in the nother
+* absorb() - update and add additional properties from another object
+++ _an object_ (required)
+* transmute() - add another object's properties not in common with the original object
 ++ _an object_ (required)
 
 ## set functions, on a thing's properties' values
@@ -115,5 +120,19 @@ The grand idea for this module would provide support for all the schema types de
  	console.log("aEvent.toHtml(): " + aEvent.toHtml());
 
 	
-    
-    
+# Background notes
+
+* http://schema.org - the definitions for HTML microformats
+* http://www.mongodb.org/display/DOCS/Object+IDs - examplanation of MongoID's ObjectId
+* https://github.com/justaprogrammer/ObjectId.js/blob/master/Objectid.js - an example implementation in JavaScript
+
+# Random ideas
+
+* schemathing.js should work in NodeJS, MongoDB's shell and HTML5 friendly browsers
+* dirty.js would be an interesting environment to play with shemathing for in-memory only applications
+* there needs to be an extraction method so you could take a block of HTML markup and generate a schemathing from it.
+* the property types need to be validated against schema.org's description (e.g. Text, URL)
+
+
+
+
