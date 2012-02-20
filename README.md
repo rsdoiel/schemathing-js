@@ -11,10 +11,15 @@ schemathing-js is an experiment in implementing an set of javascript object that
 
 A +Thing+ object might have the following methods --
 
+## factory operations
+
 * create() - creates a new thing object. If an _id is with an object it will use that id (e.g. so you could instantiate a copy of a MongoDB object). If not it will create an _id property using a NewObjectId() function if defined.
 ++ _an object_ (optional) E.g. A mongo object id.
 * clone() - creates a copy of itself into a new thing but with a new object_id.
 ++ _object_id_ (optional)
+
+## comparison operations
+
 * is() - checks if an object is of the same type or is a descendant type. Without an argument it returns a string of it's type. With a string parameter it will return true if it is the same type or inherits from that type
 ++ _type_name_ (optional) if type_name matches return true, otherwise false
 * strictIs() - same as is() strict but will not match against parent types
@@ -26,13 +31,28 @@ A +Thing+ object might have the following methods --
 ++ _an object_ (required)
 * notStrictEqual() - Check to see if properties in common are strictly not equal (!==); returns true or false.
 ++ _an object_ (required)
-* merge() - Update the properties of thing from the in common properties passed into merge
-* strictMerge() - Update the properties of thing from all the properties passed into merge
+* absorb() - absorb another object's properties except _id
 ++ _an object_ (required)
-* diff() - Given another object return an object with fields not in common or not equal (==).
+* morph() - absorb another's properties' values, except _id, dropping any properties that doesn't exist in the nother
+++ _an object_ (required)
+
+## set functions, on a thing's properties' values
+
+* intersect - Intersection of two sets properties
 ++ _an object_ (require)
-* strictDiff() - Given another object return an object with fields not in common or strict not equal (===).
+* union - Union of two sets of properties
 ++ _an object_ (require)
+* diff() - Relative Complement of two sets of properties
+++ _an object_ (require)
+* symDiff() - Symmeteric Difference of two sets of properties
+++ _an object_ (require)
+
+## extraction
+
+* fromHtml() - parse some html and find the thing in it.
+
+## rendering methods
+
 * toHtml() - return the thing object as a schema.org defined markup html block. Object's id would map to the id attribute in the outer tag.
 * toJSON() - render as JSON
 * toSource() - render as JavaScript including it's functions

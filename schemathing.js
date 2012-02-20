@@ -64,7 +64,7 @@ var equal = function (obj) {
 };
 
 var strictEqual = function (obj) {
-	return compareObj(this, obj, '==');
+	return compareObj(this, obj, '===');
 };
 
 var notEqual = function (obj) {
@@ -73,6 +73,20 @@ var notEqual = function (obj) {
 
 var strictNotEqual = function (obj) {
 	return compareObj(this, obj, '!==');
+};
+
+var absorb = function (obj) {
+	Object.keys(obj).forEach(function (ky) {
+		if (ky === "_isA") {
+			obj[ky].forEach(function(val) {
+				if (this._isA.indexOf(val) < 0) {
+					this._isA.push(val);
+				}
+			});
+		} else if (ky !== "_id") {
+			this[ky] = obj[ky];
+		}
+	});
 };
 
 var Assemble = function(schemaThing, defaults) {
@@ -95,8 +109,12 @@ var Assemble = function(schemaThing, defaults) {
 
 	// Attach Thing methods to the new object
 	schemaThing.equal = equal;
-	schemaThing.strictEqual = strictEqual;
 	schemaThing.notEqual = notEqual;
+	schemaThing.strictEqual = strictEqual;
+	schemaThing.notStrictEqual = notStrictEqual;
+	
+	schemaThing.merge = merge;
+
 	return schemaThing;
 };
 
@@ -109,8 +127,11 @@ var createThing = function (defaults) {
 		name : "",
 		url : ""
 	};
-	
-	return Assemble(newThing, defaults);
+	if (defaults !== undefined) {
+		return Assemble(newThing, defaults);
+	}
+	newThing._id = NewObjectId();
+	return newThing;
 }
 
 

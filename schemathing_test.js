@@ -26,11 +26,16 @@ var 	aThing, aClonedThing,
 console.log("Starting [" + path.basename(process.argv[1]) + "] ...");
 // Creating an empty thing
 aThing = schema.Thing.create({_id:1});
+// FIXME: want to replace _id with something more Mongo like for object id.
 assert.strictEqual(aThing._id, 1, "aThing._id === 1");
 // Should return false since aThing has nothing in common with aThingLikeObject
-assert.ok(aThing.equal(aThingLikeObject),"aThing == aThingLikeObject" );
-// Merging aThingLikeObject
-aThing.strictMerge(aThingLikeObject)
+assert.ok(! aThing.equal(aThingLikeObject),"should fail, aThing == aThingLikeObject" );
+assert.ok(! aThing.strictEqual(aThingLikeObject),"should fail, aThing === aThingLikeObject" );
+assert.ok(aThing.notEqual(aThingLikeObject),"aThing != aThingLikeObject" );
+assert.ok(! aThing.notStrictEqual(aThingLikeObject),"aThing !== aThingLikeObject" );
+
+// absorb <- absorb another object's properties, except _id or _isA
+aThing.absorb(aThingLikeObject);
 assert.ok(aThing.equal(aThingLikeObject),"aThing == aThingLikeObject");
 assert.ok(! aThing.strictEqual(aThingLikeObject),"aThing === aThingLikeObject");
 // Cloning, aClonedThing should have _id: 2
