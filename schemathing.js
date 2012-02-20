@@ -62,16 +62,15 @@ var Thing = {};
 var equal = function (obj) {
 	return compareObj(this, obj, '==');	
 };
+var notEqual = function (obj) {
+	return compareObj(this, obj, '!=');
+};
 
 var strictEqual = function (obj) {
 	return compareObj(this, obj, '===');
 };
 
-var notEqual = function (obj) {
-	return compareObj(this, obj, '!=');
-};
-
-var strictNotEqual = function (obj) {
+var notStrictEqual = function (obj) {
 	return compareObj(this, obj, '!==');
 };
 
@@ -112,9 +111,9 @@ var Assemble = function(schemaThing, defaults) {
 	schemaThing.notEqual = notEqual;
 	schemaThing.strictEqual = strictEqual;
 	schemaThing.notStrictEqual = notStrictEqual;
+	schemaThing.absorb = absorb;
+	// schemaThing.morph = morph;
 	
-	schemaThing.merge = merge;
-
 	return schemaThing;
 };
 
