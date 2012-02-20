@@ -5,7 +5,7 @@ schemathing-js
 
 # Overview
 
-schemathing-js is an experiment in implementing an set of javascript object that map to and from the microformats defined at schema.org.
+schemathing-js is an experiment in implementing a set of javascript objects that map to/from the microformats defined at schema.org.
 
 # A example Thing
 
@@ -20,9 +20,10 @@ A +Thing+ object might have the following methods --
 
 ## comparison operations
 
-* is() - checks if an object is of the same type or is a descendant type. Without an argument it returns a string of it's type. With a string parameter it will return true if it is the same type or inherits from that type
-++ _type_name_ (optional) if type_name matches return true, otherwise false
-* strictIs() - same as is() strict but will not match against parent types
+* isSimilar() - checks if an object has same properties (other object could have additional properties)
+++ _an object_ (required)
+* strictSimilar() - both objects mutually have the same property names
+++ _an object_ (required)
 * equal() - Check to see if properties in common are equal (==).
 ++ _an object_ (required)
 * strictEqual() - Check to see if common properties are strictly equal (===).
