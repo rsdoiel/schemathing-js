@@ -20,41 +20,38 @@ var LastObjectId = function () {
 };
 
 var NewObjectId = function () {
-    console.log("DEBUG cur _id: "+ ObjectIds._id);
 	ObjectIds._id += 1;
-    console.log("DEBUG after _id: "+ ObjectIds._id);
 	return ObjectIds._id;
 };
 
 // Utility methods
 var isOp = function (obj1, obj2, op) {
 	var result = true, 
-    // FIXME: keys should not be allowed to have duplicates
-    keys = Object.keys(obj1).concat(Object.keys(obj2));
+	// FIXME: keys should not be allowed to have duplicates
+	keys = Object.keys(obj1).concat(Object.keys(obj2));
 
-    keys.forEach(function(ky) {
+	keys.forEach(function(ky) {
 		if (ky === '_id'  ||
-            typeof obj1[ky] === 'function' || 
-            typeof obj2[ky] === 'function') {
+			typeof obj1[ky] === 'function' || 
+			typeof obj2[ky] === 'function') {
 			// Skip, we're not compariing id 
-        } else if (result === true) {
-            switch(op) {
-            case '===':
-			    result = (obj1[ky] === obj2[ky]);
-                break;
-		    case '==':
-                result = (obj1[ky] == obj2[ky]);
-                break;
-		    case '!==':
-                result = (obj1[ky] !== obj2[ky]);
-                break;
-		    case '!=':
-                result = (obj1[ky] != obj2[ky]);
-                break;
-            }
+		} else if (result === true) {
+			switch(op) {
+			case '===':
+				result = (obj1[ky] === obj2[ky]);
+				break;
+			case '==':
+				result = (obj1[ky] == obj2[ky]);
+				break;
+			case '!==':
+				result = (obj1[ky] !== obj2[ky]);
+				break;
+			case '!=':
+				result = (obj1[ky] != obj2[ky]);
+				break;
+			}
 		}
 	});
-    console.log("DEBUG: " + result + " " + obj1.name + " " + op + " " + obj2.name);
 	return result;
 };
 
@@ -74,61 +71,87 @@ var strictEqual = function (obj) {
 };
 
 var notEqual = function (obj) {
-    return isOp(this, obj, '!=');
+	return isOp(this, obj, '!=');
 };
 
 var notStrictEqual = function (obj) {
 	return isOp(this, obj, '!==');
 };
 
+// obj has the same non-function, non-_id properties as self
+var isSimilar = function (obj) {
+	var self = this, result = true;
+
+	Object.keys(self).forEach(function (ky) {
+		if (result === true && ky !== "_id" && 
+			typeof self[ky] !== "function") {
+			if (obj[ky] === undefined) {
+				result = false;
+			}
+		}
+	});
+	return result;
+};
+
+// all properties are in common
+var strictIsSimilar = function (obj) {
+	var self = this, result = true;
+
+	Object.keys(self).concat(Object.keys(obj)).forEach(function (ky) {
+		if (result === true) {
+			if (typeof self[ky] !== typeof obj[ky]) {
+				result = false;
+			}
+		}
+	});
+	return result;
+};
+
 // Create a copy of current object with new object id
 var clone = function () {
-    var newObject = { _id: NewObjectId() }, self = this;
-    console.log("DEBUG self._id: " + self._id);
-    console.log("DEBUG newObject._id: " + newObject._id);
-    Object.keys(self).forEach(function(ky) {
-        if (ky !== '_id') {
-            newObject[ky] = self[ky];
-        }
-    });
-    console.log("DEBUG newObject._id: " + newObject._id);
-    return newObject;
+	var newObject = { _id: NewObjectId() }, self = this;
+	Object.keys(self).forEach(function(ky) {
+		if (ky !== '_id') {
+			newObject[ky] = self[ky];
+		}
+	});
+	return newObject;
 };
 // Update existing properties from value in another object
 var update = function(obj) {
-    var self = this;
-    Object.keys(obj).forEach(function (ky) {
-        if (ky !== "_id" && self[ky] !== undefined) {
-            self[ky] = obj[ky];
-        }
-    });
-    return true;
+	var self = this;
+	Object.keys(obj).forEach(function (ky) {
+		if (ky !== "_id" && self[ky] !== undefined) {
+			self[ky] = obj[ky];
+		}
+	});
+	return true;
 };
 
 // Absorb the properties from a new object without overwriting the existing properties
 var absorb = function (obj) {
-    var self = this;
+	var self = this;
 	Object.keys(obj).forEach(function (ky) {
-        if (ky === "_id") {
-            // skip
-        } else if (self[ky] === undefined) {
-            self[ky] = obj[ky];
-        }
+		if (ky === "_id") {
+			// skip
+		} else if (self[ky] === undefined) {
+			self[ky] = obj[ky];
+		}
 	});
-    return true;
+	return true;
 };
 
 // Morph - Update existing properties and add any additoinal properties from the other object 
 var morph = function (obj) {
-    var self = this;
-    Object.keys(obj).forEach(function (ky) {
-        if (ky === "_id") {
-            // skip
-        } else {
-            self[ky] = obj[ky];
-        }
-    });
-    return true;
+	var self = this;
+	Object.keys(obj).forEach(function (ky) {
+		if (ky === "_id") {
+			// skip
+		} else {
+			self[ky] = obj[ky];
+		}
+	});
+	return true;
 };
 
 var Assemble = function(schemaThing, defaults) {
@@ -146,12 +169,14 @@ var Assemble = function(schemaThing, defaults) {
 	}
 
 	// Attach Thing methods to the new object
-    schemaThing.clone = clone;
+	schemaThing.clone = clone;
 	schemaThing.equal = equal;
+	schemaThing.isSimilar = isSimilar;
+	schemaThing.strictIsSimilar = strictIsSimilar;
 	schemaThing.notEqual = notEqual;
 	schemaThing.strictEqual = strictEqual;
 	schemaThing.notStrictEqual = notStrictEqual;
-    schemaThing.update = update;
+	schemaThing.update = update;
 	schemaThing.absorb = absorb;
 	schemaThing.morph = morph;
 	
@@ -166,9 +191,9 @@ var createThing = function (defaults) {
 		name : "",
 		url : ""
 	};
-    if (defaults === undefined || defaults._id === undefined) {
-        newThing._id = NewObjectId();
-    }
+	if (defaults === undefined || defaults._id === undefined) {
+		newThing._id = NewObjectId();
+	}
 	return Assemble(newThing, defaults);
 };
 

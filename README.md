@@ -22,7 +22,7 @@ A +Thing+ object might have the following methods --
 
 * isSimilar() - checks if an object has same properties (other object could have additional properties)
 ++ _an object_ (required)
-* strictSimilar() - both objects mutually have the same property names
+* strictIsSimilar() - both objects mutually have the same property names
 ++ _an object_ (required)
 * equal() - Check to see if properties in common are equal (==).
 ++ _an object_ (required)

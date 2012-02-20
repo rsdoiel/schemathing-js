@@ -21,6 +21,11 @@ var aThing, aClonedThing,
 		image: "http://example.com/a-plain-js-object.jpg",
 		name: 'aThingLikeObject',
 		url: "http://example.com/a-plain-js-object.json"
+	},
+	anotherObject = {
+		car:2,
+		house:"blue",
+		market:"hopscocht"
 	};
 
 
@@ -31,16 +36,30 @@ aThing = schema.Thing.create();
 assert.strictEqual(aThing._id, 1, "aThing._id === 1");
 // Should return false since aThing has nothing in common with aThingLikeObject
 assert.ok(! aThing.equal(aThingLikeObject),"should fail, aThing == aThingLikeObject: " + aThing.equal(aThingLikeObject));
+assert.ok(! aThing.equal(anotherObject), "should fail, aThing == anotherObject");
 assert.ok(! aThing.strictEqual(aThingLikeObject),"should fail, aThing === aThingLikeObject" );
+assert.ok(! aThing.strictEqual(anotherObject),"should fail, aThing === anotherObject" );
 assert.ok(aThing.notEqual(aThingLikeObject),"aThing != aThingLikeObject: " + aThing.notEqual(aThingLikeObject));
 assert.ok(aThing.notStrictEqual(aThingLikeObject),"aThing !== aThingLikeObject" );
+assert.ok(aThing.notEqual(anotherObject),"aThing != anotherObject: " + aThing.notEqual(anotherObject));
+assert.ok(aThing.notStrictEqual(anotherObject),"aThing !== anotherObject" );
 
 // morph <- update and aquire another object's properties, except _id
 aThing.morph(aThingLikeObject);
 assert.ok(aThing.equal(aThingLikeObject), "aThing == aThingLikeObject");//JSON.stringify(aThing) + " == " +JSON.stringify(aThingLikeObject));
-assert.ok(aThing.strictEqual(aThingLikeObject),"aThing === aThingLikeObject");
+assert.ok(! aThing.strictEqual(anotherObject),"should fail, aThing === anotherObject");
+assert.ok(! aThing.equal(anotherObject), "should fail, aThing == anotherObject");
+assert.strictEqual(aThing.isSimilar(aThingLikeObject), true, "aThing.isSimilar(aThingLikeObject) === true");
+assert.strictEqual(aThing.strictIsSimilar(anotherObject), false, "aThing.strictIsSimilar(aThingLikeObject) === false");
+
+
 // Cloning, aClonedThing should have _id: 2
 aClonedThing = aThing.clone();
+assert.strictEqual(aThing.isSimilar(aClonedThing), true, "aThing.isSimilar(aClonedThing)");
+assert.strictEqual(aThing.strictIsSimilar(aClonedThing), true, "aThing.strictIsSimilar(aClonedThing)");
+assert.strictEqual(aClonedThing.isSimilar(aThing), true, "aClonedThing.isSimilar(aThing)");
+assert.strictEqual(aClonedThing.strictIsSimilar(aThing), true, "aClonedThing.strictIsSimilar(aThing)");
+
 assert.strictEqual(aClonedThing._id, 2, "aClonedThing should have an id: 2 " + util.inspect(aClonedThing));
 // Should be true because everything in common is equal
 assert.ok(aThing.equal(aThingLikeObject),"aClonedThing == aThingLikeObject");
@@ -51,5 +70,8 @@ assert.ok(aClonedThing.equal(aThing),"aClonedThing == aThing");
 // Should be false since the _id is different
 assert.ok(aClonedThing.strictEqual(aThing),"aClonedThing === aThing");
 
+// Check to make sure that aClonedThing is similar to aThingLikeObject
+assert.ok(aClonedThing.isSimilar(aThingLikeObject), "aClonedThing.similar(aThingLikeObject) === true");
+assert.strictEqual(aClonedThing.strictIsSimilar(anotherObject), false, "aClonedThing.strictIsSimilar(aThingLikeObject) === false");
 
 console.log("Success! [" + path.basename(process.argv[1]) + "]");
