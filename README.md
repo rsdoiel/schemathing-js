@@ -5,7 +5,7 @@ schemathing-js
 
 # Overview
 
-schemathing-js is an experiment in implementing a set of javascript objects that map to/from the microformats defined at schema.org.
+schemathing-js is an experiment in implementing a set of javascript objects that map to/from the microdata format as defined at schema.org.
 
 # A example Thing
 
