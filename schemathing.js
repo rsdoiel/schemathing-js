@@ -11,6 +11,7 @@
 // revision: 0.0.1-experiment
 //
 
+(function() {
 // FIXME: This should be replaced with a MongoDB style Object id
 // Object Id.
 var ObjectIds = { _id : 0 };
@@ -179,6 +180,7 @@ var Assemble = function(schemaThing, defaults) {
 	schemaThing.update = update;
 	schemaThing.absorb = absorb;
 	schemaThing.morph = morph;
+	schemaThing.toJSON = function () { return JSON.stringify(this); };
 	
 	return schemaThing;
 };
@@ -198,11 +200,12 @@ var createThing = function (defaults) {
 };
 
 
-if (exports !== undefined) {
+if (typeof exports !== "undefined") {
 	exports.Assemble = Assemble;
 	exports.LastObjectId = LastObjectId;
 	exports.NewObjectId = NewObjectId;
 	exports.Thing = Thing;
 	exports.Thing.create = createThing;
 }
+}());
 

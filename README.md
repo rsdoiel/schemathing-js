@@ -44,6 +44,9 @@ A +Thing+ object might have the following methods --
 
 ## set functions, on a thing's properties' values
 
+Not sure if this is really needed but might be useful for query and 
+and set operations.
+
 * intersect - Intersection of two sets properties
 ++ _an object_ (require)
 * union - Union of two sets of properties
@@ -61,7 +64,7 @@ A +Thing+ object might have the following methods --
 
 * toHtml() - return the thing object as a schema.org defined markup html block. Object's id would map to the id attribute in the outer tag.
 * toJSON() - render as JSON
-* toSource() - render as JavaScript including it's functions
+* toSource() - (would be nice, but not essential) render as JavaScript including it's functions
 
 The grand idea for this module would provide support for all the schema types defined at schema.org with a consistent set of methods and attributes.
 
