@@ -155,6 +155,26 @@ var morph = function (obj) {
 	return true;
 };
 
+// toJSON - return a JSON encoded result without fields beginning with
+// "__"
+var toJSON = function () {
+    var blob = {};
+    
+    Object.keys(this).forEach(function(ky) {
+        if (ky.substr(0,2) !== "__" && typeof this[ky] !== 'function') {
+            blob[ky] = this[ky];
+        }
+    });
+    return JSON.stringify(blob);
+};
+
+// toHTML, first pass at simple HTML rendering of the Thing markup
+var toHTML = function () {
+    // FIXME: need to grab the default template defined in the create
+    // method and apply the fields to it.
+    return '<pre>' + JSON.stringify(this) + "</pre>"; // placeholder return
+};
+
 var Assemble = function(schemaThing, defaults) {
 	if (defaults !== undefined) {
 		Object.keys(defaults).forEach(function(ky) {
@@ -180,7 +200,8 @@ var Assemble = function(schemaThing, defaults) {
 	schemaThing.update = update;
 	schemaThing.absorb = absorb;
 	schemaThing.morph = morph;
-	schemaThing.toJSON = function () { return JSON.stringify(this); };
+	schemaThing.toJSON = toJSON;
+	schemaThing.toHTML = toHTML;
 	
 	return schemaThing;
 };
@@ -191,7 +212,9 @@ var createThing = function (defaults) {
 		description: "",
 		image : "",
 		name : "",
-		url : ""
+		url : "",
+		// Internal templates and things
+		__templateHTML: ""
 	};
 	if (defaults === undefined || defaults._id === undefined) {
 		newThing._id = NewObjectId();
