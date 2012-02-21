@@ -126,7 +126,8 @@ The grand idea for this module would provide support for all the schema types de
 	
 # Background notes
 
-* http://schema.org - the definitions for HTML microformats
+* http://schema.org - the definitions for HTML microdata
+* http://www.google.com/webmasters/tools/richsnippets test tool for microdata
 * http://www.mongodb.org/display/DOCS/Object+IDs - examplanation of MongoID's ObjectId
 * https://github.com/justaprogrammer/ObjectId.js/blob/master/Objectid.js - an example implementation in JavaScript
 
