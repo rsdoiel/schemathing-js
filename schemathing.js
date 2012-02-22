@@ -8,8 +8,20 @@
 // Released under New the BSD License.
 // See: http://opensource.org/licenses/bsd-license.php
 //
-// revision: 0.0.1-experiment
+// revision: 0.0.1c-experiment
+
+
 //
+// Notes on code style
+// exported functions begin with a capital letter and are camel case (e.g. Assemble())
+// exported objects begin with a capitil letter and are camel case (e.g. Thing)
+// functions starting with lower case are intended to be object methods (e.g. create())
+//
+
+if (require !== undefined) {
+    // If we're in NodeJS bring in Hogan Template engine.
+    var templateEngine = require('hogan');
+}
 
 (function() {
 // FIXME: This should be replaced with a MongoDB style Object id
@@ -60,7 +72,18 @@ var isOp = function (obj1, obj2, op) {
 //
 // Thing - the base object described at schema.org
 //
-var Thing = {};
+var Thing = { 
+        fields: {
+            description:"Text", 
+            image:"URL", 
+            name: "Text", 
+            url: "URL"
+        },
+        isA: ["Thing"]
+    },
+    Templates = { 
+        Thing: templateEngine.compile('<div itemscope itemtype="http://schema.org/Thing"><div itemprop="name">{{name}}</div><div itemprop="description">{{description}}</div><div itemprop="image">{{image}}</div><div itemprop="url">{{url}}</div></div>')
+    };
 
 // These methods are the common across schemething
 var equal = function (obj) {
@@ -108,21 +131,34 @@ var strictIsSimilar = function (obj) {
 	return result;
 };
 
+// An SchemaThing object factory.
+var create = function (defaults) {
+    var newThing = this.fields;
+	if (defaults === undefined || defaults._id === undefined) {
+		newThing._id = NewObjectId();
+	}
+    newThing._isA = this.isA;
+	return Assemble(newThing, defaults);
+};
+
 // Create a copy of current object with new object id
 var clone = function () {
 	var newObject = { _id: NewObjectId() }, self = this;
 	Object.keys(self).forEach(function(ky) {
-		if (ky !== '_id') {
+		if (ky === '_id') {
+            // Skip, never clone an Id.
+		} else {
 			newObject[ky] = self[ky];
 		}
 	});
 	return newObject;
 };
+
 // Update existing properties from value in another object
 var update = function(obj) {
 	var self = this;
 	Object.keys(obj).forEach(function (ky) {
-		if (ky !== "_id" && self[ky] !== undefined) {
+		if (ky !== "_id" && ky !== "_isA" && self[ky] !== undefined) {
 			self[ky] = obj[ky];
 		}
 	});
@@ -135,6 +171,12 @@ var absorb = function (obj) {
 	Object.keys(obj).forEach(function (ky) {
 		if (ky === "_id") {
 			// skip
+		} else if (ky === "_isA" && obj._isA !== undefined) {
+            obj._isA.forEach(function (item) {
+                if (self._isA.indexOf(item) < 0) {
+                    self._isA.push(item);
+                }
+            });
 		} else if (self[ky] === undefined) {
 			self[ky] = obj[ky];
 		}
@@ -148,6 +190,12 @@ var morph = function (obj) {
 	Object.keys(obj).forEach(function (ky) {
 		if (ky === "_id") {
 			// skip
+        } else if (ky === "_isA" && obj._isA !== undefined) {
+            obj._isA.forEach(function (item) {
+                if (self._isA.indexOf(item) < 0) {
+                    self._isA.push(item);
+                }
+            });
 		} else {
 			self[ky] = obj[ky];
 		}
@@ -158,21 +206,21 @@ var morph = function (obj) {
 // toJSON - return a JSON encoded result without fields beginning with
 // "__"
 var toJSON = function () {
-    var blob = {};
-    
-    Object.keys(this).forEach(function(ky) {
-        if (ky.substr(0,2) !== "__" && typeof this[ky] !== 'function') {
-            blob[ky] = this[ky];
-        }
-    });
-    return JSON.stringify(blob);
+    return JSON.stringify(this);
 };
 
 // toHTML, first pass at simple HTML rendering of the Thing markup
-var toHTML = function () {
+var toHTML = function (template) {
     // FIXME: need to grab the default template defined in the create
     // method and apply the fields to it.
-    return '<pre>' + JSON.stringify(this) + "</pre>"; // placeholder return
+    
+    // Look at the most complex type, find it's factory, apply the template,
+    // if not passed in as alternate template
+    if (template === undefined) {
+        // FIXME: this is a crude way to do this lookup
+        template = Templates[this._isA[this._isA.length - 1]];
+    }
+    return template.render(this); // placeholder return
 };
 
 var Assemble = function(schemaThing, defaults) {
@@ -190,6 +238,7 @@ var Assemble = function(schemaThing, defaults) {
 	}
 
 	// Attach Thing methods to the new object
+    schemaThing.create = create;
 	schemaThing.clone = clone;
 	schemaThing.equal = equal;
 	schemaThing.isSimilar = isSimilar;
@@ -206,29 +255,12 @@ var Assemble = function(schemaThing, defaults) {
 	return schemaThing;
 };
 
-// Thing is a "Thing" object factory.
-var createThing = function (defaults) {
-	var newThing = {
-		description: "",
-		image : "",
-		name : "",
-		url : "",
-		// Internal templates and things
-		__templateHTML: ""
-	};
-	if (defaults === undefined || defaults._id === undefined) {
-		newThing._id = NewObjectId();
-	}
-	return Assemble(newThing, defaults);
-};
-
-
 if (typeof exports !== "undefined") {
 	exports.Assemble = Assemble;
 	exports.LastObjectId = LastObjectId;
 	exports.NewObjectId = NewObjectId;
 	exports.Thing = Thing;
-	exports.Thing.create = createThing;
+    exports.Thing.create = create;
 }
 }());
 

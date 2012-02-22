@@ -1,13 +1,15 @@
 {
 	"name" : "schemathing",
-	"version" : "0.0.0b-experiment",
+	"version" : "0.0.0c-experiment",
 	"description" : "thing-js is an experiment in implementing an set of javascript object that map to and from the microformats defined at schema.org.",
 	"main" : "./schemathing.js",
 	"repository" : { 
 		"type" : "git", 
 		"url" : "http://github.com/rsdoiel/schemathing-js.git"
 	},
-	"dependencies" : {},
+	"dependencies" : {
+        "hogan": ">= 1"
+    },
 	"author" : {
 		"name" : "R. S. Doiel", 
 		"email" : "rsdoiel@gmail.com", 
