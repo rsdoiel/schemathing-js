@@ -8,7 +8,7 @@
 		"url" : "http://github.com/rsdoiel/schemathing-js.git"
 	},
 	"dependencies" : {
-        "hogan": ">= 1"
+        "mote": ">= 0.2"
     },
 	"author" : {
 		"name" : "R. S. Doiel", 

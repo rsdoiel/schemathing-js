@@ -44,7 +44,7 @@ assert.ok(aThing.notStrictEqual(aThingLikeObject),"aThing !== aThingLikeObject" 
 assert.ok(aThing.notEqual(anotherObject),"aThing != anotherObject: " + aThing.notEqual(anotherObject));
 assert.ok(aThing.notStrictEqual(anotherObject),"aThing !== anotherObject" );
 
-// morph <- update and aquire another object's properties, except _id
+// morph <- update existing properties and aquire another object's properties, except _id
 aThing.morph(aThingLikeObject);
 assert.ok(aThing.equal(aThingLikeObject), "aThing == aThingLikeObject");//JSON.stringify(aThing) + " == " +JSON.stringify(aThingLikeObject));
 assert.ok(! aThing.strictEqual(anotherObject),"should fail, aThing === anotherObject");

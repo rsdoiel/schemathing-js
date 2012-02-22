@@ -29,7 +29,7 @@ var templateEngine;
 // (e.g. mote-js, Handlebars, etc.)
 if (require !== undefined) {
     // If we're in NodeJS bring in Hogan Template engine.
-    templateEngine = require('hogan');
+    templateEngine = require('mote');
 } else {
     templateEngine = { 
         compile: function () {
@@ -66,6 +66,7 @@ var isOp = function (obj1, obj2, op) {
 
 	keys.forEach(function(ky) {
 		if (ky === '_id'  ||
+			ky === '_isA' ||
 			typeof obj1[ky] === 'function' || 
 			typeof obj2[ky] === 'function') {
 			// Skip, we're not compariing id 
@@ -128,7 +129,9 @@ var isSimilar = function (obj) {
 	var self = this, result = true;
 
 	Object.keys(self).forEach(function (ky) {
-		if (result === true && ky !== "_id" && 
+		if (result === true && 
+			ky !== "_id" &&
+			ky !== "_isA" &&
 			typeof self[ky] !== "function") {
 			if (obj[ky] === undefined) {
 				result = false;
