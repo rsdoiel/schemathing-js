@@ -13,61 +13,100 @@ A +Thing+ object might have the following methods --
 
 ## factory operations
 
-create()
-: creates a new thing object. If an _id is with an object it will use that id (e.g. so you could instantiate a copy of a MongoDB object). If not it will create an _id property using a NewObjectId() function if defined.
-++ _an object_ (optional) E.g. A mongo object id.
-clone()
-: creates a copy of itself into a new thing but with a new object_id.
-++ _object_id_ (optional)
+### create()
+
+params:  _an object_ (optional) E.g. A mongo object id.
+
+Creates a new thing object. If an _id is with an object it will use that id (e.g. so you could instantiate a copy of a MongoDB object). If not it will create an _id property using a NewObjectId() function if defined.
+
+
+### clone()
+
+params: _object_id_ (optional)
+
+Creates a copy of itself into a new thing but with a new object_id.
 
 ## comparison operations
 
-* isSimilar() - checks if an object has same properties (other object could have additional properties)
-++ _an object_ (required)
-* strictIsSimilar() - both objects mutually have the same property names
-++ _an object_ (required)
-* equal() - Check to see if properties in common are equal (==).
-++ _an object_ (required)
-* strictEqual() - Check to see if common properties are strictly equal (===).
-++ _an object_ (required)
-* notEqual() - Check to see if properties in common are not equal (!=); returns true of false.
-++ _an object_ (required)
-* notStrictEqual() - Check to see if properties in common are strictly not equal (!==); returns true or false.
-++ _an object_ (required)
+### isSimilar()
+
+params: _an object_ (required)
+
+Checks if an object has same properties (other object could have additional properties)
+
+### strictIsSimilar()
+
+params: _an object_ (required)
+
+Both objects have every property in common
+
+### equal()
+
+params: _an object_ (required)
+
+Check to see if properties in common are equal (==).
+
+### strictEqual()
+
+params: _an object_ (required)
+
+Check to see if common properties are strictly equal (===).
+
+
+### notEqual()
+
+params: _an object_ (required)
+
+Check to see if properties in common are not equal (!=); returns true of false.
+
+
+### notStrictEqual()
+
+params: _an object_ (required)
+
+Check to see if properties in common are strictly not equal (!==); returns true or false.
+
 
 ## transformation functions
 
-* update() - replace common properties from another object (except _id)
-++ _an object_ (required)
-* absorb() - update and add additional properties from another object (except _id, merge _isA list)
-++ _an object_ (required)
-* morph() - overwrite and add additional properties passed into morph (except _id, merge _isA list)
-++ _an object_ (required)
+### update()
 
-## set functions, on a thing's properties' values
+params: _an object_ (required)
 
-Not sure if this is really needed but might be useful for query and 
-and set operations. (notes: these will be added later if needed)
+Replace common properties from another object (except _id)
 
-* intersect - Intersection of two sets properties
-++ _an object_ (require)
-* union - Union of two sets of properties
-++ _an object_ (require)
-* diff() - Relative Complement of two sets of properties
-++ _an object_ (require)
-* symDiff() - Symmeteric Difference of two sets of properties
-++ _an object_ (require)
+### absorb()
+
+params: _an object_ (required)
+
+Update and add additional properties from another object (except _id, merge _isA list)
+
+### morph()
+
+params: _an object_ (required)
+
+Overwrite and add additional properties passed into morph (except _id, merge _isA list)
+
 
 ## extraction
 
 Not sure how I want to implement this. Envoking evaluating the DOM via jsDom each time seems overkill.
 
-* parse() - parse some html and create a schemathing object from it.
+### parse()
+
+params: _html source_ (required)
+
+Parse some html and create a schemathing object from it.
 
 ## rendering methods
 
-* toHtml() - return the thing object as a schema.org defined markup html block. Object's id would map to the id attribute in the outer tag.
-* toJSON() - render as JSON
+### toHtml()
+
+Return the thing object as a schema.org defined markup html block. Object's id would map to the id attribute in the outer tag.
+
+### toJSON()
+
+Render as JSON
 
 The grand idea for this module would provide support for all the schema types defined at schema.org with a consistent set of methods and attributes.
 
