@@ -15,15 +15,36 @@
 // Notes on code style
 // exported functions begin with a capital letter and are camel case (e.g. Assemble())
 // exported objects begin with a capitil letter and are camel case (e.g. Thing)
-// functions starting with lower case are intended to be object methods (e.g. create())
+// functions starting with lowercase are intended to be object methods applied
+// by a factory (e.g. var myt = Thing.create(); console.log(myt.toJSON());)
 //
 
+(function() {
+// Import modules if needed
+var templateEngine;
+
+// FIXME: need to figure out how to deal with common import
+// for browsere, NodeJS and MongoDB's JS shell.
+// FIXME: need to allow for user defined template engine.
+// (e.g. mote-js, Handlebars, etc.)
 if (require !== undefined) {
     // If we're in NodeJS bring in Hogan Template engine.
-    var templateEngine = require('hogan');
+    templateEngine = require('hogan');
+} else {
+    templateEngine = { 
+        compile: function () {
+            throw "ERROR: templateEngine.complile() is not available.";
+        },
+        render : function () { 
+            throw "ERROR: templateEngine.render() is not available.";
+        }
+    };
 }
 
-(function() {
+//
+// FIXME: Need to make ObjectIds, LastObjectId and NewObjectId conditionally defined
+// so this will work in MongoDB's shell
+//
 // FIXME: This should be replaced with a MongoDB style Object id
 // Object Id.
 var ObjectIds = { _id : 0 };
@@ -203,17 +224,13 @@ var morph = function (obj) {
 	return true;
 };
 
-// toJSON - return a JSON encoded result without fields beginning with
-// "__"
+// toJSON - return a JSON encoded result of this
 var toJSON = function () {
     return JSON.stringify(this);
 };
 
-// toHTML, first pass at simple HTML rendering of the Thing markup
+// toHTML, render schemathing object as HTML.
 var toHTML = function (template) {
-    // FIXME: need to grab the default template defined in the create
-    // method and apply the fields to it.
-    
     // Look at the most complex type, find it's factory, apply the template,
     // if not passed in as alternate template
     if (template === undefined) {
@@ -255,6 +272,8 @@ var Assemble = function(schemaThing, defaults) {
 	return schemaThing;
 };
 
+// FIXME: Need to figure out browser/MongoDB Shell
+// equivalent of NodeJS' exports.
 if (typeof exports !== "undefined") {
 	exports.Assemble = Assemble;
 	exports.LastObjectId = LastObjectId;
@@ -263,4 +282,3 @@ if (typeof exports !== "undefined") {
     exports.Thing.create = create;
 }
 }());
-

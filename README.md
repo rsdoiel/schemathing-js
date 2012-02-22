@@ -13,9 +13,11 @@ A +Thing+ object might have the following methods --
 
 ## factory operations
 
-* create() - creates a new thing object. If an _id is with an object it will use that id (e.g. so you could instantiate a copy of a MongoDB object). If not it will create an _id property using a NewObjectId() function if defined.
+create()
+: creates a new thing object. If an _id is with an object it will use that id (e.g. so you could instantiate a copy of a MongoDB object). If not it will create an _id property using a NewObjectId() function if defined.
 ++ _an object_ (optional) E.g. A mongo object id.
-* clone() - creates a copy of itself into a new thing but with a new object_id.
+clone()
+: creates a copy of itself into a new thing but with a new object_id.
 ++ _object_id_ (optional)
 
 ## comparison operations
@@ -37,15 +39,15 @@ A +Thing+ object might have the following methods --
 
 * update() - replace common properties from another object (except _id)
 ++ _an object_ (required)
-* absorb() - update and add additional properties from another object
+* absorb() - update and add additional properties from another object (except _id, merge _isA list)
 ++ _an object_ (required)
-* transmute() - add another object's properties not in common with the original object
+* morph() - overwrite and add additional properties passed into morph (except _id, merge _isA list)
 ++ _an object_ (required)
 
 ## set functions, on a thing's properties' values
 
 Not sure if this is really needed but might be useful for query and 
-and set operations.
+and set operations. (notes: these will be added later if needed)
 
 * intersect - Intersection of two sets properties
 ++ _an object_ (require)
@@ -58,13 +60,14 @@ and set operations.
 
 ## extraction
 
-* fromHtml() - parse some html and find the thing in it.
+Not sure how I want to implement this. Envoking evaluating the DOM via jsDom each time seems overkill.
+
+* parse() - parse some html and create a schemathing object from it.
 
 ## rendering methods
 
 * toHtml() - return the thing object as a schema.org defined markup html block. Object's id would map to the id attribute in the outer tag.
 * toJSON() - render as JSON
-* toSource() - (would be nice, but not essential) render as JavaScript including it's functions
 
 The grand idea for this module would provide support for all the schema types defined at schema.org with a consistent set of methods and attributes.
 
@@ -135,9 +138,13 @@ The grand idea for this module would provide support for all the schema types de
 
 * schemathing.js should work in NodeJS, MongoDB's shell and HTML5 friendly browsers
 * dirty.js would be an interesting environment to play with shemathing for in-memory only applications
-* there needs to be an extraction method so you could take a block of HTML markup and generate a schemathing from it.
-* the property types need to be validated against schema.org's description (e.g. Text, URL)
+* the property types need to be validated against schema.org's description (e.g. Boolean, Date, Number, Text, URL)
 
+# Notes on coding style
+
++ exported functions begin with a capital letter and are camel case (e.g. Assemble())
++ exported objects begin with a capitil letter and are camel case (e.g. Thing)
++ functions starting with lowercase are intended to be object methods applied by a factory (e.g. var myt = Thing.create(); console.log(myt.toJSON());)
 
 
 
