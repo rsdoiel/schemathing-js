@@ -61,8 +61,9 @@ var NewObjectId = function () {
 // Utility methods
 var isOp = function (obj1, obj2, op) {
 	var result = true, 
-	// FIXME: keys should not be allowed to have duplicates
-	keys = Object.keys(obj1).concat(Object.keys(obj2));
+	// FIXME: keys can have duplicates with concat
+	// should really with there was a concat().unique()
+	keys = Object.keys(obj1).concat(Object.keys(obj2));	
 
 	keys.forEach(function(ky) {
 		if (ky === '_id'  ||

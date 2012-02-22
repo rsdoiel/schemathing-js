@@ -90,13 +90,10 @@ Overwrite and add additional properties passed into morph (except _id, merge _is
 
 ## extraction
 
-Not sure how I want to implement this. Envoking evaluating the DOM via jsDom each time seems overkill.
+Someday maybe.  It'd be noice to have something like
 
-### parse()
+    var myNewThing = Thing.create(some_html_fragment);
 
-params: _html source_ (required)
-
-Parse some html and create a schemathing object from it.
 
 ## rendering methods
 
