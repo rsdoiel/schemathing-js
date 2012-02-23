@@ -19,27 +19,12 @@
 // by a factory (e.g. var myt = Thing.create(); console.log(myt.toJSON());)
 //
 
-(function() {
-// Import modules if needed
-var templateEngine;
-
 // FIXME: need to figure out how to deal with common import
 // for browsere, NodeJS and MongoDB's JS shell.
 // FIXME: need to allow for user defined template engine.
 // (e.g. mote-js, Handlebars, etc.)
-if (require !== undefined) {
-    // If we're in NodeJS bring in the Template engine.
-    templateEngine = require('mote');
-} else {
-    templateEngine = { 
-        compile: function () {
-            throw "ERROR: templateEngine.compile() is not available.";
-        },
-        render : function () { 
-            throw "ERROR: templateEngine.render() is not available.";
-        }
-    };
-}
+// If we're in NodeJS bring in the Template engine.
+var url = require('url');
 
 //
 // FIXME: Need to make ObjectIds, LastObjectId and NewObjectId conditionally defined
@@ -115,7 +100,7 @@ var DataType = {
 	},
 	isInteger: function (num) {
 		// FIXME: write this
-		throw "isInteger Not Imeplemented";
+		throw "isInteger Not Imeplemented: " + num;
 	},
 	isText: function (Text) {
 		if (typeof Text === "string") {
@@ -131,6 +116,20 @@ var DataType = {
 	}
 };
 
+
+var toHandlebars = function(obj) {
+        var innerHTML = [],
+        markup = function (tag_name, attributes, innerHTML) {
+            return '<' + (tag_name + ' ' + attributes.join(" ")).trim() + ' >' + innerHTML.trim() + '</' + tag_name + '>';
+        };
+
+        Object.keys(this.fields).forEach(function(ky) {
+            // FIXME: Should look at Type and instroduce sub-scope as needed.
+            innerHTML.push(markup('div',['itemprop="' + ky + '"'], '{{' + ky + '}}'));
+        });
+        return markup('div', ['itemscope', 'itemtype="' + this.itemTypeURL + '"'],innerHTML.join(''));
+    };
+
 //
 // Thing - the base object described at schema.org
 //
@@ -138,21 +137,22 @@ var combineFields = function () {
 	var args = Array.prototype.slice.call(arguments),
 	result = {};
 	args.forEach(function(field) {
-		field.forEach(function(ky) {
+		Object.keys(field).forEach(function(ky) {
 			result[ky] = field[ky];
 		});
 	});
 	return result;
-}
+};
 
 var Thing = { 
         fields: {
-            description:"Text", 
-            image:"URL", 
+            description: "Text", 
+            image: "URL", 
             name: "Text", 
             url: "URL"
         },
-        isA: ["Thing"]
+        isA: ["Thing"],
+        itemTypeURL: "http://schema.org/Thing"
     },
     CreativeWork = {
         fields: combineFields(Thing.fields,{
@@ -194,7 +194,8 @@ var Thing = {
             version: "Number",
             video: "VideoObject"
         }),
-        isA: ["Thing", "CreativeWork"]
+        isA: ["Thing", "CreativeWork"],
+        itemTypeURL: "http://schema.org/CreativeWork"
     },
     Article = {
         fields: combineFields(CreativeWork.fields, {
@@ -202,7 +203,8 @@ var Thing = {
             articleSection: "Text",
             wordCount: "Interger"
         }),
-        isA: ["Thing", "CreativeWork", "Article"]
+        isA: ["Thing", "CreativeWork", "Article"],
+        itemTypeURL: "http://schema.org/Article"
     },
     BlogPosting = {
         fields: combineFields(CreativeWork.fields,{
@@ -210,7 +212,8 @@ var Thing = {
             articleSection: "Text",
             wordCount: "Interger"
         }),
-        isA: ["Thing", "CreativeWork", "Article", "BlogPosting"]
+        isA: ["Thing", "CreativeWork", "Article", "BlogPosting"],
+        itemTypeURL: "http://schema.org/BlogPosting"
     },
     NewsArticle = {
         fields: combineFields(Article.fields, {
@@ -220,7 +223,8 @@ var Thing = {
             printPage: "Text",
             printSection: "Text"
         }),
-        isA: ["Thing", "CreativeWork", "Article", "NewsArticle"]
+        isA: ["Thing", "CreativeWork", "Article", "NewsArticle"],
+        itemTypeURL: "http://schema.org/NewsArticle"
     },
     ScholarlyArticle = {
         fields: combineFields(Article.fields, {
@@ -228,13 +232,15 @@ var Thing = {
             articleSection: "Text",
             wordCount: "Interger"
         }),
-        isA: ["Thing", "CreativeWork", "Article", "ScholarlyArticle"]
+        isA: ["Thing", "CreativeWork", "Article", "ScholarlyArticle"],
+        itemTypeURL: "http://schema.org/ScholarlyArticle"
     },
     Blog = {
         fields: combineFields(CreativeWork.fields, {
             blogPosts: "BlogPosting"
         }),
-        isA: ["Thing", "CreativeWork", "Blog"]
+        isA: ["Thing", "CreativeWork", "Blog"],
+        itemTypeURL: "http://schema.org/Blog"
     },
     Book = {
         fields: combineFields(CreativeWork.fields, {
@@ -244,11 +250,10 @@ var Thing = {
             isbn: "Text",
             numberOfPages: "Number"
         }),
-        isA: ["Thing", "CreativeWork", "Book"]
-    },
-    Templates = { 
-        Thing: templateEngine.compile('<div itemscope itemtype="http://schema.org/Thing"><div itemprop="name">{{name}}</div><div itemprop="description">{{description}}</div><div itemprop="image">{{image}}</div><div itemprop="url">{{url}}</div></div>')
+        isA: ["Thing", "CreativeWork", "Book"],
+        itemTypeURL: "http://schema.org/Book"
     };
+    
 
 // These methods are the common across schemething
 var equal = function (obj) {
@@ -300,7 +305,10 @@ var strictIsSimilar = function (obj) {
 
 // An SchemaThing object factory.
 var create = function (defaults) {
-    var newThing = this.fields;
+    var newThing = {};
+    Object.keys(this.fields).forEach(function (ky) {
+        newThing[ky] = "";//this.fields[ky];
+    });
 	if (defaults === undefined || defaults._id === undefined) {
 		newThing._id = NewObjectId();
 	}
@@ -370,22 +378,8 @@ var morph = function (obj) {
 	return true;
 };
 
-// toJSON - return a JSON encoded result of this
-var toJSON = function () {
-    return JSON.stringify(this);
-};
 
-// toHTML, render schemathing object as HTML.
-var toHTML = function (template) {
-    // Look at the most complex type, find it's factory, apply the template,
-    // if not passed in as alternate template
-    if (template === undefined) {
-        // FIXME: this is a crude way to do this lookup
-        template = Templates[this._isA[this._isA.length - 1]];
-    }
-    return template.render(this); // placeholder return
-};
-
+// defaults are presumed to be the usual JS object
 var Assemble = function(schemaThing, defaults) {
 	if (defaults !== undefined) {
 		Object.keys(defaults).forEach(function(ky) {
@@ -399,7 +393,6 @@ var Assemble = function(schemaThing, defaults) {
 	if (schemaThing.name === "") {
 		schemaThing.name = "schemathing_" + schemaThing._id;
 	}
-
 	// Attach Thing methods to the new object
     schemaThing.create = create;
 	schemaThing.clone = clone;
@@ -412,44 +405,37 @@ var Assemble = function(schemaThing, defaults) {
 	schemaThing.update = update;
 	schemaThing.absorb = absorb;
 	schemaThing.morph = morph;
-	schemaThing.toJSON = toJSON;
-	schemaThing.toHTML = toHTML;
 	
 	return schemaThing;
 };
 
 // FIXME: Need to figure out browser/MongoDB Shell
 // equivalent of NodeJS' exports.
-if (typeof exports !== "undefined") {
-	exports.Assemble = Assemble;
-	exports.LastObjectId = LastObjectId;
-	exports.NewObjectId = NewObjectId;
-	exports.Thing = Thing;
-    exports.Thing.create = create;
-    exports.CreativeWork = CreativeWork;
-    exports.CreativeWork.create = create;
-    exports.Article = Article;
-    exports.Article.create = create;
-    exports.BlogPosting = BlogPosting;
-    exports.BlogPosting.create = create;
-    exports.NewsArticle = NewsArticle;
-    exports.NewsArticle.create = create;
-    exports.ScholarlyArticle = ScholarlyArticle;
-    exports.ScholarlyArticle.create = create;
-    exports.Blog = Blog;
-    exports.Blog.create = create;
-    exports.Book = Book;
-    exports.Book.create = create;
-} else {
-    // for Browser or MongoDB shell
-    Thing.create = create;
-    CreativeWork.create = create;
-    Article.create = create;
-    BlogPosting.create = create;
-    NewsArticle.create = create;
-    ScholarlyArticle.create = create;
-    Blog.create = create;
-    Book.create = create;
-}
-
-}());
+exports.Assemble = Assemble;
+exports.LastObjectId = LastObjectId;
+exports.NewObjectId = NewObjectId;
+exports.DataType = DataType;
+exports.Thing = Thing;
+exports.Thing.create = create;
+exports.Thing.toHandlebars = toHandlebars;
+exports.CreativeWork = CreativeWork;
+exports.CreativeWork.create = create;
+exports.CreativeWork.toHandlebars = toHandlebars;
+exports.Article = Article;
+exports.Article.create = create;
+exports.Article.toHandlebars = toHandlebars;
+exports.BlogPosting = BlogPosting;
+exports.BlogPosting.create = create;
+exports.BlogPosting.toHandlebars = toHandlebars;
+exports.NewsArticle = NewsArticle;
+exports.NewsArticle.create = create;
+exports.NewsArticle.toHandlebars = toHandlebars;
+exports.ScholarlyArticle = ScholarlyArticle;
+exports.ScholarlyArticle.create = create;
+exports.ScholarlyArticle.toHandlebars = toHandlebars;
+exports.Blog = Blog;
+exports.Blog.create = create;
+exports.Blog.toHandlebars = toHandlebars;
+exports.Book = Book;
+exports.Book.create = create;
+exports.Book.toHandlebars = toHandlebars;

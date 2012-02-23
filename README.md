@@ -88,25 +88,6 @@ params: _an object_ (required)
 Overwrite and add additional properties passed into morph (except _id, merge _isA list)
 
 
-## extraction
-
-Someday maybe.  It'd be noice to have something like
-
-    var myNewThing = Thing.create(some_html_fragment);
-
-
-## rendering methods
-
-### toHtml()
-
-Return the thing object as a schema.org defined markup html block. Object's id would map to the id attribute in the outer tag.
-
-### toJSON()
-
-Render as JSON
-
-The grand idea for this module would provide support for all the schema types defined at schema.org with a consistent set of methods and attributes.
-
 # A theoretical example using the module in NodeJS
 
     var assert = require('assert'),

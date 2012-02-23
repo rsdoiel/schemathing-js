@@ -46,7 +46,7 @@ assert.ok(aThing.notStrictEqual(anotherObject),"aThing !== anotherObject" );
 
 // morph <- update existing properties and aquire another object's properties, except _id
 aThing.morph(aThingLikeObject);
-assert.ok(aThing.equal(aThingLikeObject), "aThing == aThingLikeObject");//JSON.stringify(aThing) + " == " +JSON.stringify(aThingLikeObject));
+assert.ok(aThing.equal(aThingLikeObject), "aThing == aThingLikeObject");
 assert.ok(! aThing.strictEqual(anotherObject),"should fail, aThing === anotherObject");
 assert.ok(! aThing.equal(anotherObject), "should fail, aThing == anotherObject");
 assert.strictEqual(aThing.isSimilar(aThingLikeObject), true, "aThing.isSimilar(aThingLikeObject) === true");
@@ -74,4 +74,7 @@ assert.ok(aClonedThing.strictEqual(aThing),"aClonedThing === aThing");
 assert.ok(aClonedThing.isSimilar(aThingLikeObject), "aClonedThing.similar(aThingLikeObject) === true");
 assert.strictEqual(aClonedThing.strictIsSimilar(anotherObject), false, "aClonedThing.strictIsSimilar(aThingLikeObject) === false");
 
+// Sort out template support
+console.log(schema.Thing);
+console.log(schema.Thing.toHandlebars());
 console.log("Success! [" + path.basename(process.argv[1]) + "]");
