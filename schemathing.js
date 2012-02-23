@@ -117,8 +117,8 @@ var DataType = {
 };
 
 
-var toHandlebars = function(obj) {
-        var innerHTML = [],
+var toHandlebars = function() {
+        var innerHTML = [], s,
         markup = function (tag_name, attributes, innerHTML) {
             return '<' + (tag_name + ' ' + attributes.join(" ")).trim() + ' >' + innerHTML.trim() + '</' + tag_name + '>';
         };
@@ -127,7 +127,9 @@ var toHandlebars = function(obj) {
             // FIXME: Should look at Type and instroduce sub-scope as needed.
             innerHTML.push(markup('div',['itemprop="' + ky + '"'], '{{' + ky + '}}'));
         });
-        return markup('div', ['itemscope', 'itemtype="' + this.itemTypeURL + '"'],innerHTML.join(''));
+        s = markup('div', ['itemscope', 'itemtype="' + this.itemTypeURL + '"'],innerHTML.join(''));
+        console.log("DEBUG s:", s);
+        return s;
     };
 
 //

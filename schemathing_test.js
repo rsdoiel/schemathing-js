@@ -75,6 +75,5 @@ assert.ok(aClonedThing.isSimilar(aThingLikeObject), "aClonedThing.similar(aThing
 assert.strictEqual(aClonedThing.strictIsSimilar(anotherObject), false, "aClonedThing.strictIsSimilar(aThingLikeObject) === false");
 
 // Sort out template support
-console.log(schema.Thing);
 console.log(schema.Thing.toHandlebars());
 console.log("Success! [" + path.basename(process.argv[1]) + "]");
