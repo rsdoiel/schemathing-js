@@ -15,16 +15,16 @@ A +Thing+ object might have the following methods --
 
 ### create()
 
-params:  _an object_ (optional) E.g. A mongo object id.
+params:  _an object_ (optional) E.g. A mongo object id. { _id: "MONGO_ID_STRING" }
 
 Creates a new thing object. If an _id is with an object it will use that id (e.g. so you could instantiate a copy of a MongoDB object). If not it will create an _id property using a NewObjectId() function if defined.
 
-
 ### clone()
 
-params: _object_id_ (optional)
+params: _object_id_ (optional) E.g. A mongo object id. { _id: "MONGO_ID_STRING" }
 
-Creates a copy of itself into a new thing but with a new object_id.
+Creates a copy of itself as a new thing but with a new object_id.
+
 
 ## comparison operations
 
@@ -87,7 +87,7 @@ params: _an object_ (required)
 
 Overwrite and add additional properties passed into morph (except _id, merge _isA list)
 
-## rendering options
+## rendering functions
 
 schemething relies on mote-js for implementing handlebars templates and rendering html.
 
@@ -97,6 +97,11 @@ params: _options_ (optional) an array of attribute strings (e.g. ['id="myid"', '
 
 Render the default template with mote into HTML adding necessary attributes to outer div.
 
+### toJSON()
+
+params: none
+
+Render as a JSON object.
 
 # A theoretical example using the module in NodeJS
 

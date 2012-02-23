@@ -85,4 +85,6 @@ assert.ok(s.indexOf('<div ') > -1,"Should have an <div ." + s);
 assert.ok(s.indexOf('</div>') > -1,"Should have an </div>." + s);
 assert.equal((mote.compile(s))(aThing), aThing.toHTML(), "mote.comple()/toHTML() test");
 
+assert.ok(JSON.parse(aThing.toJSON()), "Test toJSON(): " + aThing.toJSON());
+
 console.log("Success! [" + path.basename(process.argv[1]) + "]");

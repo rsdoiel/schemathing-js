@@ -324,6 +324,13 @@ var create = function (defaults) {
     	var template = mote.compile(self.toHandlebars(options));
     	return template(this);
     };
+    newThing.toJSON = function () {
+    	var obj = {}, newSelf = this;
+    	Object.keys(self.fields).forEach(function (ky) {
+    		obj[ky] = newSelf[ky];
+    	});
+    	return JSON.stringify(obj);
+    };
 	return Assemble(newThing, defaults);
 };
 
