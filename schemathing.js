@@ -28,7 +28,7 @@ var templateEngine;
 // FIXME: need to allow for user defined template engine.
 // (e.g. mote-js, Handlebars, etc.)
 if (require !== undefined) {
-    // If we're in NodeJS bring in Hogan Template engine.
+    // If we're in NodeJS bring in the Template engine.
     templateEngine = require('mote');
 } else {
     templateEngine = { 
@@ -91,10 +91,60 @@ var isOp = function (obj1, obj2, op) {
 	return result;
 };
 
+//
+// Core data types
+//
+var DataType = {
+	isBoolean: function (val) {
+		if (val === true || val === false) {
+			return true;
+		}
+		return false;
+	},
+	isDate: function (iso8601) {
+		if (Number(Date.parse(iso8601))) {
+			return true;
+		}
+		return false;
+	},
+	isNumber: function(num) {
+		if (Number(num)) {
+			return true;
+		}
+		return false;
+	},
+	isInteger: function (num) {
+		// FIXME: write this
+		throw "isInteger Not Imeplemented";
+	},
+	isText: function (Text) {
+		if (typeof Text === "string") {
+			return true;
+		}
+		return false;
+	},
+	isURL: function (URL) {
+		if (url.format(url.parse(URL)) === URL) {
+			return true;
+		}
+		return false;
+	}
+};
 
 //
 // Thing - the base object described at schema.org
 //
+var combineFields = function () {
+	var args = Array.prototype.slice.call(arguments),
+	result = {};
+	args.forEach(function(field) {
+		field.forEach(function(ky) {
+			result[ky] = field[ky];
+		});
+	});
+	return result;
+}
+
 var Thing = { 
         fields: {
             description:"Text", 
@@ -105,11 +155,7 @@ var Thing = {
         isA: ["Thing"]
     },
     CreativeWork = {
-        fields: {
-            description:"Text", 
-            image:"URL", 
-            name: "Text", 
-            url: "URL",
+        fields: combineFields(Thing.fields,{
             about: "Thing",
             accountablePerson: "Person",
             aggregateRating: "AggregateRating",
@@ -147,306 +193,57 @@ var Thing = {
             thumbnailUrl: "URL",
             version: "Number",
             video: "VideoObject"
-        },
+        }),
         isA: ["Thing", "CreativeWork"]
     },
     Article = {
-        fields: {
-            description:"Text", 
-            image:"URL", 
-            name: "Text", 
-            url: "URL",
-            about: "Thing",
-            accountablePerson: "Person",
-            aggregateRating: "AggregateRating",
-            alternativeHeadline: "Text",
-            associatedMedia: "MediaObject",
-            audio: "AudioObject",
-            author: "Person||Organization",
-            awards: "Text",
-            comment: "UserComments",
-            contentLocation: "Place",
-            contentRating: "Text",
-            contributor: "Person||Organization",
-            copyrightHolder: "Person||Organization",
-            copyrightYear: "Number",
-            creator: "Person||Organization", 
-            dateCreated: "Date",
-            dateModified: "Date",
-            datePublished: "Date",
-            discussionUrl: "URL",
-            editor: "Person||Organization",
-            encodings: "MediaObject",
-            genre: "Text",
-            headline: "Text",
-            inLanguage: "Text",
-            interactionCount: "Text",
-            isFamilyFriendly: "Person||Organization",
-            keywords: "Text",
-            mentions: "Thing",
-            offers: "Offer",
-            provider: "Person||Organization",
-            publisher: "Person||Organization",
-            publishingPrinciples: "URL",
-            reviews: "Review",
-            sourceOrganization: "Organization",
-            thumbnailUrl: "URL",
-            version: "Number",
-            video: "VideoObject",
+        fields: combineFields(CreativeWork.fields, {
             articleBody: "Text",
             articleSection: "Text",
             wordCount: "Interger"
-        },
+        }),
         isA: ["Thing", "CreativeWork", "Article"]
     },
     BlogPosting = {
-        fields: {
-            description:"Text", 
-            image:"URL", 
-            name: "Text", 
-            url: "URL",
-            about: "Thing",
-            accountablePerson: "Person",
-            aggregateRating: "AggregateRating",
-            alternativeHeadline: "Text",
-            associatedMedia: "MediaObject",
-            audio: "AudioObject",
-            author: "Person||Organization",
-            awards: "Text",
-            comment: "UserComments",
-            contentLocation: "Place",
-            contentRating: "Text",
-            contributor: "Person||Organization",
-            copyrightHolder: "Person||Organization",
-            copyrightYear: "Number",
-            creator: "Person||Organization", 
-            dateCreated: "Date",
-            dateModified: "Date",
-            datePublished: "Date",
-            discussionUrl: "URL",
-            editor: "Person||Organization",
-            encodings: "MediaObject",
-            genre: "Text",
-            headline: "Text",
-            inLanguage: "Text",
-            interactionCount: "Text",
-            isFamilyFriendly: "Person||Organization",
-            keywords: "Text",
-            mentions: "Thing",
-            offers: "Offer",
-            provider: "Person||Organization",
-            publisher: "Person||Organization",
-            publishingPrinciples: "URL",
-            reviews: "Review",
-            sourceOrganization: "Organization",
-            thumbnailUrl: "URL",
-            version: "Number",
-            video: "VideoObject",
+        fields: combineFields(CreativeWork.fields,{
             articleBody: "Text",
             articleSection: "Text",
             wordCount: "Interger"
-        },
+        }),
         isA: ["Thing", "CreativeWork", "Article", "BlogPosting"]
     },
     NewsArticle = {
-        fields: {
-            description:"Text", 
-            image:"URL", 
-            name: "Text", 
-            url: "URL",
-            about: "Thing",
-            accountablePerson: "Person",
-            aggregateRating: "AggregateRating",
-            alternativeHeadline: "Text",
-            associatedMedia: "MediaObject",
-            audio: "AudioObject",
-            author: "Person||Organization",
-            awards: "Text",
-            comment: "UserComments",
-            contentLocation: "Place",
-            contentRating: "Text",
-            contributor: "Person||Organization",
-            copyrightHolder: "Person||Organization",
-            copyrightYear: "Number",
-            creator: "Person||Organization", 
-            dateCreated: "Date",
-            dateModified: "Date",
-            datePublished: "Date",
-            discussionUrl: "URL",
-            editor: "Person||Organization",
-            encodings: "MediaObject",
-            genre: "Text",
-            headline: "Text",
-            inLanguage: "Text",
-            interactionCount: "Text",
-            isFamilyFriendly: "Person||Organization",
-            keywords: "Text",
-            mentions: "Thing",
-            offers: "Offer",
-            provider: "Person||Organization",
-            publisher: "Person||Organization",
-            publishingPrinciples: "URL",
-            reviews: "Review",
-            sourceOrganization: "Organization",
-            thumbnailUrl: "URL",
-            version: "Number",
-            video: "VideoObject",
-            articleBody: "Text",
-            articleSection: "Text",
-            wordCount: "Interger",
+        fields: combineFields(Article.fields, {
             dateline: "Text",
             printColumn: "Text",
             printEdition: "Text",
             printPage: "Text",
             printSection: "Text"
-        },
+        }),
         isA: ["Thing", "CreativeWork", "Article", "NewsArticle"]
     },
     ScholarlyArticle = {
-        fields: {
-            description:"Text", 
-            image:"URL", 
-            name: "Text", 
-            url: "URL",
-            about: "Thing",
-            accountablePerson: "Person",
-            aggregateRating: "AggregateRating",
-            alternativeHeadline: "Text",
-            associatedMedia: "MediaObject",
-            audio: "AudioObject",
-            author: "Person||Organization",
-            awards: "Text",
-            comment: "UserComments",
-            contentLocation: "Place",
-            contentRating: "Text",
-            contributor: "Person||Organization",
-            copyrightHolder: "Person||Organization",
-            copyrightYear: "Number",
-            creator: "Person||Organization", 
-            dateCreated: "Date",
-            dateModified: "Date",
-            datePublished: "Date",
-            discussionUrl: "URL",
-            editor: "Person||Organization",
-            encodings: "MediaObject",
-            genre: "Text",
-            headline: "Text",
-            inLanguage: "Text",
-            interactionCount: "Text",
-            isFamilyFriendly: "Person||Organization",
-            keywords: "Text",
-            mentions: "Thing",
-            offers: "Offer",
-            provider: "Person||Organization",
-            publisher: "Person||Organization",
-            publishingPrinciples: "URL",
-            reviews: "Review",
-            sourceOrganization: "Organization",
-            thumbnailUrl: "URL",
-            version: "Number",
-            video: "VideoObject",
+        fields: combineFields(Article.fields, {
             articleBody: "Text",
             articleSection: "Text",
             wordCount: "Interger"
-        },
+        }),
         isA: ["Thing", "CreativeWork", "Article", "ScholarlyArticle"]
     },
     Blog = {
-        fields: {
-            description:"Text", 
-            image:"URL", 
-            name: "Text", 
-            url: "URL",
-            about: "Thing",
-            accountablePerson: "Person",
-            aggregateRating: "AggregateRating",
-            alternativeHeadline: "Text",
-            associatedMedia: "MediaObject",
-            audio: "AudioObject",
-            author: "Person||Organization",
-            awards: "Text",
-            comment: "UserComments",
-            contentLocation: "Place",
-            contentRating: "Text",
-            contributor: "Person||Organization",
-            copyrightHolder: "Person||Organization",
-            copyrightYear: "Number",
-            creator: "Person||Organization", 
-            dateCreated: "Date",
-            dateModified: "Date",
-            datePublished: "Date",
-            discussionUrl: "URL",
-            editor: "Person||Organization",
-            encodings: "MediaObject",
-            genre: "Text",
-            headline: "Text",
-            inLanguage: "Text",
-            interactionCount: "Text",
-            isFamilyFriendly: "Person||Organization",
-            keywords: "Text",
-            mentions: "Thing",
-            offers: "Offer",
-            provider: "Person||Organization",
-            publisher: "Person||Organization",
-            publishingPrinciples: "URL",
-            reviews: "Review",
-            sourceOrganization: "Organization",
-            thumbnailUrl: "URL",
-            version: "Number",
-            video: "VideoObject",
+        fields: combineFields(CreativeWork.fields, {
             blogPosts: "BlogPosting"
-        },
+        }),
         isA: ["Thing", "CreativeWork", "Blog"]
     },
     Book = {
-        fields: {
-            description:"Text", 
-            image:"URL", 
-            name: "Text", 
-            url: "URL",
-            about: "Thing",
-            accountablePerson: "Person",
-            aggregateRating: "AggregateRating",
-            alternativeHeadline: "Text",
-            associatedMedia: "MediaObject",
-            audio: "AudioObject",
-            author: "Person||Organization",
-            awards: "Text",
-            comment: "UserComments",
-            contentLocation: "Place",
-            contentRating: "Text",
-            contributor: "Person||Organization",
-            copyrightHolder: "Person||Organization",
-            copyrightYear: "Number",
-            creator: "Person||Organization", 
-            dateCreated: "Date",
-            dateModified: "Date",
-            datePublished: "Date",
-            discussionUrl: "URL",
-            editor: "Person||Organization",
-            encodings: "MediaObject",
-            genre: "Text",
-            headline: "Text",
-            inLanguage: "Text",
-            interactionCount: "Text",
-            isFamilyFriendly: "Person||Organization",
-            keywords: "Text",
-            mentions: "Thing",
-            offers: "Offer",
-            provider: "Person||Organization",
-            publisher: "Person||Organization",
-            publishingPrinciples: "URL",
-            reviews: "Review",
-            sourceOrganization: "Organization",
-            thumbnailUrl: "URL",
-            version: "Number",
-            video: "VideoObject",
+        fields: combineFields(CreativeWork.fields, {
             bookEdition: "Text",
             bookFormat: "BookFormatType",
             illustrator: "Person",
             isbn: "Text",
             numberOfPages: "Number"
-        },
+        }),
         isA: ["Thing", "CreativeWork", "Book"]
     },
     Templates = { 
