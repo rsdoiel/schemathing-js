@@ -8,8 +8,8 @@
 // Released under New the BSD License.
 // See: http://opensource.org/licenses/bsd-license.php
 //
-// revision: 0.0.0c-experiment
-
+// revision: 0.0.0e-experiment
+//
 
 //
 // Notes on code style
@@ -24,7 +24,8 @@
 // FIXME: need to allow for user defined template engine.
 // (e.g. mote-js, Handlebars, etc.)
 // If we're in NodeJS bring in the Template engine.
-var url = require('url');
+var url = require('url'),
+	mote = require('mote');
 
 //
 // FIXME: Need to make ObjectIds, LastObjectId and NewObjectId conditionally defined
@@ -117,20 +118,24 @@ var DataType = {
 };
 
 
-var toHandlebars = function() {
-        var innerHTML = [], s,
-        markup = function (tag_name, attributes, innerHTML) {
-            return '<' + (tag_name + ' ' + attributes.join(" ")).trim() + ' >' + innerHTML.trim() + '</' + tag_name + '>';
-        };
+// Options is any additional array attribute strings for outer div
+// E.g. ['class="myclass"','id="my_id"','editable']
+var toHandlebars = function(options) {
+	var innerHTML = [], attributes = ['itemscope', 'itemtype="' + this.itemTypeURL + '"'],
+	markup = function (tag_name, attributes, innerHTML) {
+		return '<' + (tag_name + ' ' + attributes.join(" ")).trim() + '>' + innerHTML.trim() + '</' + tag_name + '>';
+	};
+	
+	if (options !== undefined) {
+		attributes = options.concat(attributes);
+	}
 
-        Object.keys(this.fields).forEach(function(ky) {
-            // FIXME: Should look at Type and instroduce sub-scope as needed.
-            innerHTML.push(markup('div',['itemprop="' + ky + '"'], '{{' + ky + '}}'));
-        });
-        s = markup('div', ['itemscope', 'itemtype="' + this.itemTypeURL + '"'],innerHTML.join(''));
-        console.log("DEBUG s:", s);
-        return s;
-    };
+	Object.keys(this.fields).forEach(function(ky) {
+		// FIXME: Should look at Type and instroduce sub-scope as needed.
+		innerHTML.push(markup('div',['itemprop="' + ky + '"'], '{{' + ky + '}}'));
+	});
+	return markup('div', attributes,innerHTML.join(''));
+};
 
 //
 // Thing - the base object described at schema.org
@@ -307,14 +312,18 @@ var strictIsSimilar = function (obj) {
 
 // An SchemaThing object factory.
 var create = function (defaults) {
-    var newThing = {};
-    Object.keys(this.fields).forEach(function (ky) {
-        newThing[ky] = "";//this.fields[ky];
+    var newThing = {}, self = this;
+    Object.keys(self.fields).forEach(function (ky) {
+        newThing[ky] = self.fields[ky];
     });
 	if (defaults === undefined || defaults._id === undefined) {
 		newThing._id = NewObjectId();
 	}
     newThing._isA = this.isA;
+    newThing.toHTML = function (options) {
+    	var template = mote.compile(self.toHandlebars(options));
+    	return template(this);
+    };
 	return Assemble(newThing, defaults);
 };
 
@@ -407,7 +416,6 @@ var Assemble = function(schemaThing, defaults) {
 	schemaThing.update = update;
 	schemaThing.absorb = absorb;
 	schemaThing.morph = morph;
-	
 	return schemaThing;
 };
 

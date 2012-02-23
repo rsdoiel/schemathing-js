@@ -7,12 +7,13 @@
 // Released under New the BSD License.
 // See: http://opensource.org/licenses/bsd-license.php
 //
-// revision: 0.0.0c-experiment
+// revision: 0.0.0e-experiment
 //
 var util = require('util'),
     path = require('path'),
 	assert = require('assert'),
-	schema = require('./schemathing');
+	schema = require('./schemathing'),
+	mote = require('mote');
 
 // Examples to play with
 var aThing, aClonedThing, 
@@ -74,6 +75,14 @@ assert.ok(aClonedThing.strictEqual(aThing),"aClonedThing === aThing");
 assert.ok(aClonedThing.isSimilar(aThingLikeObject), "aClonedThing.similar(aThingLikeObject) === true");
 assert.strictEqual(aClonedThing.strictIsSimilar(anotherObject), false, "aClonedThing.strictIsSimilar(aThingLikeObject) === false");
 
-// Sort out template support
-console.log(schema.Thing.toHandlebars());
+// Sort out template support and toHTML
+var s = schema.Thing.toHandlebars();
+assert.ok(s, "Should have some html: " + s);
+assert.ok(s.indexOf('itemscope') > -1,"Should have an item scope. " + s);
+assert.ok(s.indexOf('itemtype') > -1,"Should have an item type. " + s);
+assert.ok(s.indexOf('itemprop') > -1,"Should have an item prop. " + s);
+assert.ok(s.indexOf('<div ') > -1,"Should have an <div ." + s);
+assert.ok(s.indexOf('</div>') > -1,"Should have an </div>." + s);
+assert.equal((mote.compile(s))(aThing), aThing.toHTML(), "mote.comple()/toHTML() test");
+
 console.log("Success! [" + path.basename(process.argv[1]) + "]");

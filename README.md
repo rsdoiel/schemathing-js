@@ -1,6 +1,6 @@
 schemathing-js
 ========
-0.0.0c-experiment
+0.0.0e-experiment
 ----------------
 
 # Overview
@@ -86,6 +86,16 @@ Update and add additional properties from another object (except _id, merge _isA
 params: _an object_ (required)
 
 Overwrite and add additional properties passed into morph (except _id, merge _isA list)
+
+## rendering options
+
+schemething relies on mote-js for implementing handlebars templates and rendering html.
+
+### toHTML()
+
+params: _options_ (optional) an array of attribute strings (e.g. ['id="myid"', 'class="myclass"'])
+
+Render the default template with mote into HTML adding necessary attributes to outer div.
 
 
 # A theoretical example using the module in NodeJS
