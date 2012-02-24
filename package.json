@@ -1,6 +1,6 @@
 {
 	"name" : "schemathing",
-	"version" : "0.0.0e-experiment",
+	"version" : "0.0.0f-experiment",
 	"description" : "thing-js is an experiment in implementing an set of javascript object that map to and from the microformats defined at schema.org.",
 	"main" : "./schemathing.js",
 	"repository" : {

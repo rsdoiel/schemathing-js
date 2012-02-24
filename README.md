@@ -1,6 +1,6 @@
 schemathing-js
 ========
-0.0.0e-experiment
+0.0.0f-experiment
 ----------------
 
 # Overview
