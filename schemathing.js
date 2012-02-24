@@ -80,7 +80,7 @@ var isOp = function (obj1, obj2, op) {
 //
 // Core data types
 //
-var exports.DataType = {
+exports.DataType = {
 	isBoolean: function (val) {
 		if (val === true || val === false) {
 			return true;
@@ -485,97 +485,382 @@ var Thing = exports.Thing = {
         itemTypeURL: "http://schema.org/MusicPlayList"
     },
     Event = exports.Event = {
-    	fields: combineFields(Thing.fields, {
-    		attendees: "Person||Organization",
-    		duration: "Duration",
-    		endDate: "Date",
-    		location: "Place||PostalAddress",
-    		offers: "Offer",
-    		performers: "Person||Organization",
-    		startDate: "Date",
-    		subEvents: "Event",
-    		superEvent: "Event"
-    	}),
+        fields: combineFields(Thing.fields, {
+            attendees: "Person||Organization",
+            duration: "Duration",
+            endDate: "Date",
+            location: "Place||PostalAddress",
+            offers: "Offer",
+            performers: "Person||Organization",
+            startDate: "Date",
+            subEvents: "Event",
+            superEvent: "Event"
+            }),
         isA: ["Thing", "Event"],
         itemTypeURL: "http://schema.org/Event"
     },
     Intangible = exports.Intangible = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible"],
-        itemTypeURL: "http://schema.org/Intangible"    	
+        itemTypeURL: "http://schema.org/Intangible"
     },
     Person = exports.Person = {
-    	fields: combineFields(Thing.fields, {
-    		additionalName: "Text",
-    		address: "PostalAddress",
-    		affiliation: "Organization",
-    		alumniOf: "EducationalOrganization",
-    		awards: "Text",
-    		birthDate: "Date",
-    		children: "Person",
-    		colleagues: "Person",
-    		contactPoints: "ContactPoint",
-    		deathDate: "Date",
-    		email: "Text",
-    		familyName: "Text",
-    		faxNumber: "Text",
-    		follows: "Person",
-    		gender: "Text",
-    		givenName: "Text",
-    		homeLocation: "Place||ContactPoint",
-    		honorificPrefix: "Text",
-    		honorificSuffix: "Text",
-    		interactionCount: "Text",
-    		jobTitle: "Text",
-    		knows: "Person",
-    		memberOf: "Organization",
-    		nationality: "Country",
-    		parents: "Person",
-    		performerIn: "Event",
-    		relatedTo: "Person",
-    		siblings: "Person",
-    		spouse: "Person",
-    		telephone: "Text",
-    		workLocation: "Place||ContactPoint",
-    		worksFor: "Organization"
-    	}),
+        fields: combineFields(Thing.fields, {
+            additionalName: "Text",
+            address: "PostalAddress",
+            affiliation: "Organization",
+            alumniOf: "EducationalOrganization",
+            awards: "Text",
+            birthDate: "Date",
+            children: "Person",
+            colleagues: "Person",
+            contactPoints: "ContactPoint",
+            deathDate: "Date",
+            email: "Text",
+            familyName: "Text",
+            faxNumber: "Text",
+            follows: "Person",
+            gender: "Text",
+            givenName: "Text",
+            homeLocation: "Place||ContactPoint",
+            honorificPrefix: "Text",
+            honorificSuffix: "Text",
+            interactionCount: "Text",
+            jobTitle: "Text",
+            knows: "Person",
+            memberOf: "Organization",
+            nationality: "Country",
+            parents: "Person",
+            performerIn: "Event",
+            relatedTo: "Person",
+            siblings: "Person",
+            spouse: "Person",
+            telephone: "Text",
+            workLocation: "Place||ContactPoint",
+            worksFor: "Organization"
+        }),
         isA: ["Thing", "Person"],
         itemTypeURL: "http://schema.org/Person"    	
     },
     Place = exports.Place = {
-    	fields: combineFields(Thing.fields, {
-    		address: "PostalAddress",
-    		aggregateRating: "AggregateRating",
-    		containedIn: "Place",
-    		events: "Event",
-    		faxNumber: "Text",
-    		geo: "GeoCoordinates||GeoShape",
-    		interactionCount: "Text",
-    		maps: "URL",
-    		photos: "Photograph||ImageObject",
-    		reviews: "Review",
-    		telephone: "Text"
-    	}),
+        fields: combineFields(Thing.fields, {
+            address: "PostalAddress",
+            aggregateRating: "AggregateRating",
+            containedIn: "Place",
+            events: "Event",
+            faxNumber: "Text",
+            geo: "GeoCoordinates||GeoShape",
+            interactionCount: "Text",
+            maps: "URL",
+            photos: "Photograph||ImageObject",
+            reviews: "Review",
+            telephone: "Text"
+        }),
         isA: ["Thing", "Place"],
-        itemTypeURL: "http://schema.org/Place"    	
+        itemTypeURL: "http://schema.org/Place"
+    },
+    AdministrativeArea = exports.AdministrativeArea = {
+        fields: Place.fields,
+        isA: ["Thing", "Place", "AdministrativeArea"],
+        itemTypeURL: "http://schema.org/AdministrativeArea"
+    },
+    City = exports.City = {
+        fields: Place.fields,
+        isA: ["Thing", "Place", "AdministrativeArea", "City"],
+        itemTypeURL: "http://schema.org/City"
+    },
+    Country = exports.Country = {
+        fields: Place.fields,
+        isA: ["Thing", "Place", "AdministrativeArea", "Country"],
+        itemTypeURL: "http://schema.org/Country"
+    },
+    State = exports.State = {
+        fields: Place.fields,
+        isA: ["Thing", "Place", "AdministrativeArea", "State"],
+        itemTypeURL: "http://schema.org/State"
     },
     CivicStructure = exports.CivicStructure = {
-    	fields: combineFields(Place.fields, {openingHours: "Duration"}),
+        fields: combineFields(Place.fields, {openingHours: "Duration"}),
         isA: ["Thing", "Place", "CivicStructure"],
         itemTypeURL: "http://schema.org/CivicStructure"
     },
+    Airport = exports.Airport = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Airport"],
+        itemTypeURL: "http://schema.org/Airport"
+    },
+    Aquarium = exports.Aquarium = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Aquarium"],
+        itemTypeURL: "http://schema.org/Aquarium"
+    },
+    Beach = exports.Beach = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Beach"],
+        itemTypeURL: "http://schema.org/Beach"
+    },
+    BusStation = exports.BusStation = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "BusStation"],
+        itemTypeURL: "http://schema.org/BusStation"
+    },
+    BusStop = exports.BusStop = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "BusStop"],
+        itemTypeURL: "http://schema.org/BusStop"
+    },
+    Campground = exports.Campground = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Campground"],
+        itemTypeURL: "http://schema.org/Campground"
+    },
+    Cemetery = exports.Cemetery = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Cemetery"],
+        itemTypeURL: "http://schema.org/Cemetery"
+    },
+    Crematorium = exports.Crematorium = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Crematorium"],
+        itemTypeURL: "http://schema.org/Crematorium"
+    },
+    EventVenue = exports.EventVenue = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "EventVenue"],
+        itemTypeURL: "http://schema.org/EventVenue"
+    },
+    GovernmentBuilding = exports.GovernmentBuilding = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "GovernmentBuilding"],
+        itemTypeURL: "http://schema.org/GovernmentBuilding"
+    },
+    CityHall = exports.CityHall = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "GovernmentBuilding", "CityHall"],
+        itemTypeURL: "http://schema.org/CityHall"
+    },
+    Courthouse = exports.Courthouse = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "GovernmentBuilding", "Courthouse"],
+        itemTypeURL: "http://schema.org/Courthouse"
+    },
+    DefenceEstablishment = exports.DefenceEstablishment = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "GovernmentBuilding", "DefenceEstablishment"],
+        itemTypeURL: "http://schema.org/DefenceEstablishment"
+    },
+    Embassy = exports.Embassy = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "GovernmentBuilding", "Embassy"],
+        itemTypeURL: "http://schema.org/Embassy"
+    },
+    LegislativeBuilding = exports.LegislativeBuilding = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "GovernmentBuilding", "LegislativeBuilding"],
+        itemTypeURL: "http://schema.org/LegislativeBuilding"
+    },
+    Museum = exports.Museum = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Museum"],
+        itemTypeURL: "http://schema.org/Museum"
+    },
+    MusicVenue = exports.MusicVenue = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "MusicVenue"],
+        itemTypeURL: "http://schema.org/MusicVenue"
+    },
+    Park = exports.Park = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Park"],
+        itemTypeURL: "http://schema.org/Park"
+    },
+    ParkingFacility = exports.ParkingFacility = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "ParkingFacility"],
+        itemTypeURL: "http://schema.org/ParkingFacility"
+    },
+    PerformingArtsTheater = exports.PerformingArtsTheater = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PerformingArtsTheater"],
+        itemTypeURL: "http://schema.org/PerformingArtsTheater"
+    },
+    PlaceOfWorship = exports.PlaceOfWorship = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PlaceOfWorship"],
+        itemTypeURL: "http://schema.org/PlaceOfWorship"
+    },
+    BuddhistTemple = exports.BuddhistTemple = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PlaceOfWorship", "BuddhistTemple"],
+        itemTypeURL: "http://schema.org/BuddhistTemple"
+    },
+    CatholicChurch = exports.CatholicChurch = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PlaceOfWorship", "CatholicChurch"],
+        itemTypeURL: "http://schema.org/CatholicChurch"
+    },
+    Church = exports.Church = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PlaceOfWorship", "Church"],
+        itemTypeURL: "http://schema.org/Church"
+    },
+    HinduTemple = exports.HinduTemple = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PlaceOfWorship", "HinduTemple"],
+        itemTypeURL: "http://schema.org/HinduTemple"
+    },
+    Mosque = exports.Mosque = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PlaceOfWorship", "Mosque"],
+        itemTypeURL: "http://schema.org/Mosque"
+    },
+    Synagogue = exports.Synagogue = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "PlaceOfWorship", "Synagogue"],
+        itemTypeURL: "http://schema.org/Synagogue"
+    },
+    Playground = exports.Playground = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Playground"],
+        itemTypeURL: "http://schema.org/Playground"
+    },
+    RVPark = exports.RVPark = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "RVPark"],
+        itemTypeURL: "http://schema.org/RVPark"
+    },
+    StadiumOrArena = exports.StadiumOrArena = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "StadiumOrArena"],
+        itemTypeURL: "http://schema.org/StadiumOrArena"
+    },
+    SubwayStation = exports.SubwayStation = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "SubwayStation"],
+        itemTypeURL: "http://schema.org/SubwayStation"
+    },
+    TaxiStand = exports.TaxiStand = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "TaxiStand"],
+        itemTypeURL: "http://schema.org/TaxiStand"
+    },
+    TrainStation = exports.TrainStation = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "TrainStation"],
+        itemTypeURL: "http://schema.org/TrainStation"
+    },
+    Zoo = exports.Zoo = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "CivicStructure", "Zoo"],
+        itemTypeURL: "http://schema.org/Zoo"
+    },
+    Landform = exports.Landform = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform"],
+        itemTypeURL: "http://schema.org/Landform"
+    },
+    BodyOfWater = exports.BodyOfWater = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater"],
+        itemTypeURL: "http://schema.org/BodyOfWater"
+    },
+    Canal = exports.Canal = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "Canal"],
+        itemTypeURL: "http://schema.org/Canal"
+    },
+    LakeBodyOfWater = exports.LakeBodyOfWater = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "LakeBodyOfWater"],
+        itemTypeURL: "http://schema.org/LakeBodyOfWater"
+    },
+    OceanBodyOfWater = exports.OceanBodyOfWater = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "OceanBodyOfWater"],
+        itemTypeURL: "http://schema.org/OceanBodyOfWater"
+    },
+    Pond = exports.Pond = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "Pond"],
+        itemTypeURL: "http://schema.org/Pond"
+    },
+    Reservoir = exports.Reservoir = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "Reservoir"],
+        itemTypeURL: "http://schema.org/Reservoir"
+    },
+    RiverBodyOfWater = exports.RiverBodyOfWater = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "RiverBodyOfWater"],
+        itemTypeURL: "http://schema.org/RiverBodyOfWater"
+    },
+    SeaBodyOfWater = exports.SeaBodyOfWater = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "SeaBodyOfWater"],
+        itemTypeURL: "http://schema.org/SeaBodyOfWater"
+    },
+    Waterfall = exports.Waterfall = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "BodyOfWater", "Waterfall"],
+        itemTypeURL: "http://schema.org/Waterfall"
+    },
+    Continent = exports.Continent = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "Continent"],
+        itemTypeURL: "http://schema.org/Continent"
+    },
+    Mountain = exports.Mountain = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "Mountain"],
+        itemTypeURL: "http://schema.org/Mountain"
+    },
+    Volcano = exports.Volcano = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Landform", "Volcano"],
+        itemTypeURL: "http://schema.org/Volcano"
+    },
+    LandmarksOrHistoricalBuildings = exports.LandmarksOrHistoricalBuildings = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "LandmarksOrHistoricalBuildings"],
+        itemTypeURL: "http://schema.org/LandmarksOrHistoricalBuildings"
+    },
+    Residence = exports.Residence = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Residence"],
+        itemTypeURL: "http://schema.org/Residence"
+    },
+    ApartmentComplex = exports.ApartmentComplex = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Residence", "ApartmentComplex"],
+        itemTypeURL: "http://schema.org/ApartmentComplex"
+    },
+    GatedResidenceCommunity = exports.GatedResidenceCommunity = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Residence", "GatedResidenceCommunity"],
+        itemTypeURL: "http://schema.org/GatedResidenceCommunity"
+    },
+    SingleFamilyResidence = exports.SingleFamilyResidence = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "Residence", "SingleFamilyResidence"],
+        itemTypeURL: "http://schema.org/SingleFamilyResidence"
+    },
+    TouristAttraction = exports.TouristAttraction = {
+        fields: CivicStructure.fields,
+        isA: ["Thing", "Place", "TouristAttraction"],
+        itemTypeURL: "http://schema.org/TouristAttraction"
+    },
     Product = exports.Product = {
-    	fields: combineFields(Thing.fields, {
-    		aggregateRating: "AggregateRating",
-    		brand: "Organization",
-    		manufacturer: "Organization",
-    		model: "Text",
-    		offers: "Offers",
-    		productID: "Text",
-    		reviews: "Review"
-    	}),
+        fields: combineFields(Thing.fields, {
+            aggregateRating: "AggregateRating",
+            brand: "Organization",
+            manufacturer: "Organization",
+            model: "Text",
+            offers: "Offers",
+            productID: "Text",
+            reviews: "Review"
+        }),
         isA: ["Thing", "Product"],
-        itemTypeURL: "http://schema.org/Product"    	
+        itemTypeURL: "http://schema.org/Product"
     },
     BlogPosting = exports.BlogPosting = {
         fields: combineFields(CreativeWork.fields,{
@@ -617,31 +902,31 @@ var Thing = exports.Thing = {
         fields: combineFields(MusicPlayList.fields, {
             byArtist: "MusicGroup"
         }),
-        isA: ["Thing", "CreativeWork", "MusicPlayList", "MusicAlbum"],
-        itemTypeURL: "http://schema.org/MusicAlbum"
+        isA: ["Thing", "Organization", "PerformingGroup", "MusicGroup"],
+        itemTypeURL: "http://schema.org/MusicGroup"
     },
     MusicRecording = exports.MusicRecording = {
-    	fields: combineFields(CreativeWork.fields, {
-    		byArtist: "MusicGroup",
-    		duration: "Duration",
-    		inAlbum: "MusicAlbum", 
-    		inPlaylist: "MusicPlayList"
-    	}),
+        fields: combineFields(CreativeWork.fields, {
+            byArtist: "MusicGroup",
+            duration: "Duration",
+            inAlbum: "MusicAlbum",
+            inPlaylist: "MusicPlayList"
+        }),
         isA: ["Thing", "CreativeWork", "MusicRecording"],
         itemTypeURL: "http://schema.org/MusicRecording"
     },
     Painting = exports.Painting = {
-    	fields: CreativeWork.fields,
+        fields: CreativeWork.fields,
         isA: ["Thing", "CreativeWork", "Painting"],
-        itemTypeURL: "http://schema.org/Painting"    	
+        itemTypeURL: "http://schema.org/Painting"
     },
     Photograph = exports.Photograph = {
-    	fields: CreativeWork.fields,
+        fields: CreativeWork.fields,
         isA: ["Thing", "CreativeWork", "Photograph"],
-        itemTypeURL: "http://schema.org/Photograph"    	
+        itemTypeURL: "http://schema.org/Photograph"
     },
     Recipe = exports.Recipe = {
-    	fields: combineFields(CreativeWork.fields, {
+        fields: combineFields(CreativeWork.fields, {
 			cookTime: "Duration",
 			cookingMethod: "Text",
 			ingredients: "Text",
@@ -652,9 +937,9 @@ var Thing = exports.Thing = {
 			recipeInstructions: "Text",
 			recipeYield: "Text", 
 			totalTime: "Duration"
-    	}),
+        }),
         isA: ["Thing", "CreativeWork", "Recipe"],
-        itemTypeURL: "http://schema.org/Recipe"    	
+        itemTypeURL: "http://schema.org/Recipe"
     },
 	Review = exports.Review = {
 		fields: combineFields(CreativeWork.fields, {
@@ -932,598 +1217,598 @@ var Thing = exports.Thing = {
         itemTypeURL: "http://schema.org/VisualArtsEvent"
 	},
     Enumeration = exports.Enumeration = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration"],
-        itemTypeURL: "http://schema.org/Enumeration"    	
+        itemTypeURL: "http://schema.org/Enumeration"
     },
     BookFormatType = exports.BookFormatType = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "BookFormatType"],
         itemTypeURL: "http://schema.org/BookFormatType"    	
     },
     BookFormatType = exports.BookFormatType = {
-    	fields: combineFields(BookFormatType.fields, { bookFormat: "eBook"}),
+        fields: combineFields(BookFormatType.fields, { bookFormat: "eBook"}),
         isA: ["Thing", "Intangible", "Enumeration", "BookFormatType", "EBook"],
-        itemTypeURL: "http://schema.org/BookFormatType"    	
+        itemTypeURL: "http://schema.org/BookFormatType"
     },
     EBook = exports.EBook = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "BookFormatType", "EBook"],
-        itemTypeURL: "http://schema.org/EBook"    	
+        itemTypeURL: "http://schema.org/EBook"
     },
 	Hardcover = exports.Hardcover = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "BookFormatType", "Hardcover"],
-        itemTypeURL: "http://schema.org/Hardcover"    	
+        itemTypeURL: "http://schema.org/Hardcover"
     },
 	Paperback = exports.Paperback = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "BookFormatType", "Paperback"],
-        itemTypeURL: "http://schema.org/Paperback"    	
+        itemTypeURL: "http://schema.org/Paperback"
     },
 	ItemAvailability = exports.ItemAvailability = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "ItemAvailability"],
-        itemTypeURL: "http://schema.org/ItemAvailability"    	
+        itemTypeURL: "http://schema.org/ItemAvailability"
     },
 	Discontinued = exports.Discontinued = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "ItemAvailability", "Discontinued"],
-        itemTypeURL: "http://schema.org/Discontinued"    	
+        itemTypeURL: "http://schema.org/Discontinued"
     },
 	InStock = exports.InStock = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "ItemAvailability", "InStock"],
-        itemTypeURL: "http://schema.org/InStock"    	
+        itemTypeURL: "http://schema.org/InStock"
     },
 	InStoreOnly = exports.InStoreOnly = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "ItemAvailability", "InStoreOnly"],
-        itemTypeURL: "http://schema.org/InStoreOnly"    	
+        itemTypeURL: "http://schema.org/InStoreOnly"
     },
 	OnlineOnly = exports.OnlineOnly = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "ItemAvailability", "OnlineOnly"],
-        itemTypeURL: "http://schema.org/OnlineOnly"    	
+        itemTypeURL: "http://schema.org/OnlineOnly"
     },
 	OutOfStock = exports.OutOfStock = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "ItemAvailability", "OutOfStock"],
-        itemTypeURL: "http://schema.org/OutOfStock"    	
+        itemTypeURL: "http://schema.org/OutOfStock"
     },
 	PreOrder = exports.PreOrder = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "ItemAvailability", "PreOrder"],
-        itemTypeURL: "http://schema.org/PreOrder"    	
+        itemTypeURL: "http://schema.org/PreOrder"
     },
 	OfferItemCondition = exports.OfferItemCondition = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "OfferItemCondition"],
-        itemTypeURL: "http://schema.org/OfferItemCondition"    	
+        itemTypeURL: "http://schema.org/OfferItemCondition"
     },
 	DamagedCondition = exports.DamagedCondition = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "OfferItemCondition", "DamagedCondition"],
-        itemTypeURL: "http://schema.org/DamagedCondition"    	
+        itemTypeURL: "http://schema.org/DamagedCondition"
     },
 	NewCondition = exports.NewCondition = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "OfferItemCondition", "NewCondition"],
-        itemTypeURL: "http://schema.org/NewCondition"    	
+        itemTypeURL: "http://schema.org/NewCondition"
     },
 	RefurbishedCondition = exports.RefurbishedCondition = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "OfferItemCondition", "RefurbishedCondition"],
-        itemTypeURL: "http://schema.org/RefurbishedCondition"    	
+        itemTypeURL: "http://schema.org/RefurbishedCondition"
     },
 	UsedCondition = exports.UsedCondition = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Enumeration", "OfferItemCondition", "UsedCondition"],
-        itemTypeURL: "http://schema.org/UsedCondition"    	
+        itemTypeURL: "http://schema.org/UsedCondition"
     },
 	JobPosting = exports.JobPosting = {
-    	fields: combineFields(Thing.fields, {
-    		baseSalary: "Number",
-    		benefits: "Text",
-    		datePosted: "Date",
-    		educationRequirements: "Text",
-    		employmentType: "Text",
-    		experienceRequirements: "Text",
-    		hiringOrganization: "Organization",
-    		incentives: "Text",
-    		industry: "Text",
-    		jobLocation: "Place",
-    		occupationalCategory: "Text",
-    		qualifications: "Text",
-    		responsibilities: "Text",
-    		salaryCurrency: "Text",
-    		skills: "Text",
-    		specialCommitments: "Text",
-    		title: "Text",
-    		workHours: "Text"
-    	}),
+        fields: combineFields(Thing.fields, {
+            baseSalary: "Number",
+            benefits: "Text",
+            datePosted: "Date",
+            educationRequirements: "Text",
+            employmentType: "Text",
+            experienceRequirements: "Text",
+            hiringOrganization: "Organization",
+            incentives: "Text",
+            industry: "Text",
+            jobLocation: "Place",
+            occupationalCategory: "Text",
+            qualifications: "Text",
+            responsibilities: "Text",
+            salaryCurrency: "Text",
+            skills: "Text",
+            specialCommitments: "Text",
+            title: "Text",
+            workHours: "Text"
+        }),
         isA: ["Thing", "Intangible", "JobPosting"],
-        itemTypeURL: "http://schema.org/JobPosting"    	
+        itemTypeURL: "http://schema.org/JobPosting"
     },
 	Language = exports.Language = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Language"],
-        itemTypeURL: "http://schema.org/Language"    	
+        itemTypeURL: "http://schema.org/Language"
     },
 	Offer = exports.Offer = {
-    	fields: combineFields(Thing.fields, {
-    		aggregateRating: "AggregateRating",
-    		availability: "ItemAvailability",
-    		itemCondition: "OfferItemCondition",
-    		itemOffered: "Product",
-    		price: "Number||Text",
-    		priceCurrency: "Text",
-    		priceValidUntil: "Date",
-    		reviews: "Review",
-    		seller: "Organization"
-    	}),
+        fields: combineFields(Thing.fields, {
+            aggregateRating: "AggregateRating",
+            availability: "ItemAvailability",
+            itemCondition: "OfferItemCondition",
+            itemOffered: "Product",
+            price: "Number||Text",
+            priceCurrency: "Text",
+            priceValidUntil: "Date",
+            reviews: "Review",
+            seller: "Organization"
+        }),
         isA: ["Thing", "Intangible", "Offer"],
-        itemTypeURL: "http://schema.org/Offer"    	
+        itemTypeURL: "http://schema.org/Offer"
     },
 	AggregateOffer = exports.AggregateOffer = {
-    	fields: combineFields(Offer.fields, {
-    		highPrice: "Number||Text",
-    		lowPrice: "Number||Text",
-    		offerCount: "Integer"
-    	}),
+        fields: combineFields(Offer.fields, {
+            highPrice: "Number||Text",
+            lowPrice: "Number||Text",
+            offerCount: "Integer"
+        }),
         isA: ["Thing", "Intangible", "Offer", "AggregateOffer"],
-        itemTypeURL: "http://schema.org/AggregateOffer"    	
+        itemTypeURL: "http://schema.org/AggregateOffer"
     },
 	Quantity = exports.Quantity = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Quantity"],
-        itemTypeURL: "http://schema.org/Quantity"    	
+        itemTypeURL: "http://schema.org/Quantity"
     },
 	Distance = exports.Distance = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Quantity", "Distance"],
-        itemTypeURL: "http://schema.org/Distance"    	
+        itemTypeURL: "http://schema.org/Distance"
     },
 	Duration = exports.Duration = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Quantity", "Duration"],
-        itemTypeURL: "http://schema.org/Duration"    	
+        itemTypeURL: "http://schema.org/Duration"
     },
 	Energy = exports.Energy = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Quantity", "Energy"],
-        itemTypeURL: "http://schema.org/Energy"    	
+        itemTypeURL: "http://schema.org/Energy"
     },
 	Mass = exports.Mass = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible", "Quantity", "Mass"],
-        itemTypeURL: "http://schema.org/Mass"    	
+        itemTypeURL: "http://schema.org/Mass"
     },
 	Rating = exports.Rating = {
-    	fields: combineFields(Thing.fields, {
-    		bestRating: "Number||Text",
-    		ratingValue: "Text",
-    		worstRating: "Number||Text",
-    	}),
+        fields: combineFields(Thing.fields, {
+            bestRating: "Number||Text",
+            ratingValue: "Text",
+            worstRating: "Number||Text",
+        }),
         isA: ["Thing", "Intangible", "Rating"],
-        itemTypeURL: "http://schema.org/Rating"    	
+        itemTypeURL: "http://schema.org/Rating"
     },
 	AggregateRating = exports.AggregateRating = {
-    	fields: combineFields(Rating.fields, {
-    		itemReviewed: "Thing",
-    		ratingCount: "Number",
-    		reviewCount: "Number"
-    	}),
+        fields: combineFields(Rating.fields, {
+            itemReviewed: "Thing",
+            ratingCount: "Number",
+            reviewCount: "Number"
+        }),
         isA: ["Thing", "Intangible", "Rating", "AggregateRating"],
-        itemTypeURL: "http://schema.org/AggregateRating"    	
+        itemTypeURL: "http://schema.org/AggregateRating"
     },
     StructuredValue = exports.StructuredValue = {
-    	fields: Thing.fields,
+        fields: Thing.fields,
         isA: ["Thing", "Intangible","StructuredValue"],
-        itemTypeURL: "http://schema.org/StructuredValue"    	
+        itemTypeURL: "http://schema.org/StructuredValue"
     },
     ContactPoint = exports.ContactPoint = {
-    	fields: combineFields(StructuredValue.fields, {
-    		contactType: "Text",
-    		email: "Text",
-    		faxNumber: "Text",
-    		telephone: "Text"
-    	}),
-    	isA: ["Thing", "Intangible", "StructuredValue", "ContactPoint"],
+        fields: combineFields(StructuredValue.fields, {
+            contactType: "Text",
+            email: "Text",
+            faxNumber: "Text",
+            telephone: "Text"
+        }),
+        isA: ["Thing", "Intangible", "StructuredValue", "ContactPoint"],
     	itemTypeURL: "http://schema.org/ContactPoint"
     },
     PostalAddress = exports.PostalAddress = {
-    	fields: combineFields(ContactPoint.fields, {
-    		addressCountry: "Country",
-    		addressLocality: "Text",
-    		addressRegion: "Text",
-    		postOfficeBoxNumber: "Text",
-    		postalCode: "Text",
-    		streetAddress: "Text"
-    	}),
-    	isA: ["Thing", "Intangible", "StructuredValue", "ContactPoint", "PostalAddress"],
-    	itemTypeURL: "http://schema.org/PostalAddress"
+        fields: combineFields(ContactPoint.fields, {
+            addressCountry: "Country",
+            addressLocality: "Text",
+            addressRegion: "Text",
+            postOfficeBoxNumber: "Text",
+            postalCode: "Text",
+            streetAddress: "Text"
+        }),
+        isA: ["Thing", "Intangible", "StructuredValue", "ContactPoint", "PostalAddress"],
+        itemTypeURL: "http://schema.org/PostalAddress"
     },
     GeoCoordinates = exports.GeoCoordinates = {
-    	fields: combineFields(Thing.fields, {
-    		elevation: "Number||Text",
-    		latitude: "Number||Text",
-    		longitude: "Number||Text"
-    	}),
-    	isA: ["Thing", "Intangible", "StructuredValue", "GeoCoordinates"],
-    	itemTypeURL: "http://schema.org/GeoCoordinates"
+        fields: combineFields(Thing.fields, {
+            elevation: "Number||Text",
+            latitude: "Number||Text",
+            longitude: "Number||Text"
+        }),
+        isA: ["Thing", "Intangible", "StructuredValue", "GeoCoordinates"],
+        itemTypeURL: "http://schema.org/GeoCoordinates"
     },
     GeoShape = exports.GeoShape = {
-    	fields: combineFields(Thing.fields, {
-    		box: "Text",
-    		circle: "Text",
-    		elevation: "Number||Text",
-    		line: "Text",
-    		polygon: "Text"
-    	}),
-    	isA: ["Thing", "Intangible", "StructuredValue", "GeoShape"],
-    	itemTypeURL: "http://schema.org/GeoShape"
+        fields: combineFields(Thing.fields, {
+            box: "Text",
+            circle: "Text",
+            elevation: "Number||Text",
+            line: "Text",
+            polygon: "Text"
+        }),
+        isA: ["Thing", "Intangible", "StructuredValue", "GeoShape"],
+        itemTypeURL: "http://schema.org/GeoShape"
     },
     NutritionInformation = exports.NutritionInformation = {
-    	fields: combineFields(Thing.fields, {
-    		calories: "Energy",
-    		carbohydrateContent: "Mass",
-    		cholesterolContent: "Mass",
-    		fatContent: "Mass",
-    		fiberContent: "Mass",
-    		proteinContent: "Mass",
-    		saturatedFatContent: "Mass",
-    		servingSize: "Text",
-    		sodiumContent: "Mass",
-    		sugarContent: "Mass",
-    		transFatContent: "Mass",
-    		unsaturatedFatContent: "Mass"
-    	}),
-    	isA: ["Thing", "Intangible", "StructuredValue", "NutritionInformation"],
-    	itemTypeURL: "http://schema.org/NutritionInformation"
+        fields: combineFields(Thing.fields, {
+            calories: "Energy",
+            carbohydrateContent: "Mass",
+            cholesterolContent: "Mass",
+            fatContent: "Mass",
+            fiberContent: "Mass",
+            proteinContent: "Mass",
+            saturatedFatContent: "Mass",
+            servingSize: "Text",
+            sodiumContent: "Mass",
+            sugarContent: "Mass",
+            transFatContent: "Mass",
+            unsaturatedFatContent: "Mass"
+        }),
+        isA: ["Thing", "Intangible", "StructuredValue", "NutritionInformation"],
+        itemTypeURL: "http://schema.org/NutritionInformation"
     },
     Organization = exports.Organization = {
-    	fields: combineFields(Thing.fields, {
-    		address: "PostalAddress",
-    		aggregateRating: "AggregateRating",
-    		contactPoints: "ContactPoint",
-    		email: "Text",
-    		employees: "Person",
-    		events: "Event",
-    		faxNumber: "Text",
-    		founders: "Person",
-    		foundingDate: "Date",
-    		interactionCount: "Text",
-    		location: "Place||PostalAddress",
-    		members: "Person||Organization",
-    		reviews: "Review",
-    		telephone: "Text"
-    	}),
+        fields: combineFields(Thing.fields, {
+            address: "PostalAddress",
+            aggregateRating: "AggregateRating",
+            contactPoints: "ContactPoint",
+            email: "Text",
+            employees: "Person",
+            events: "Event",
+            faxNumber: "Text",
+            founders: "Person",
+            foundingDate: "Date",
+            interactionCount: "Text",
+            location: "Place||PostalAddress",
+            members: "Person||Organization",
+            reviews: "Review",
+            telephone: "Text"
+        }),
         isA: ["Thing", "Organization"],
         itemTypeURL: "http://schema.org/Organization"    
     },
     Corporation = exports.Corporation = {
-    	fields: combineFields(Organization.fields, {
-    		tickerSymbol: "Text"
-    	}),
+        fields: combineFields(Organization.fields, {
+            tickerSymbol: "Text"
+        }),
         isA: ["Thing", "Organization", "Corporation"],
         itemTypeURL: "http://schema.org/Corporation"    
     },
     EducationalOrganization = exports.EducationalOrganization = {
-    	fields: combineFields(Organization.fields, {
-    		alumni: "Person"
-    	}),
+        fields: combineFields(Organization.fields, {
+            alumni: "Person"
+        }),
         isA: ["Thing", "Organization", "EducationalOrganization"],
         itemTypeURL: "http://schema.org/EducationalOrganization"    
     },
     GovernmentOrganization = exports.GovernmentOrganization = {
-    	fields: Organization.fields,
+        fields: Organization.fields,
         isA: ["Thing", "Organization", "GovernmentOrganization"],
         itemTypeURL: "http://schema.org/GovernmentOrganization"    
     },
     LocalBusiness = exports.LocalBusiness = {
-    	fields: combineFields(Organization.fields, Place.fields, {
-    		branchOf: "Organization",
-    		currenciesAccepted: "Text",
-    		openingHours: "Duration",
-    		paymentAccepted: "Text",
-    		priceRange: "Text"
-    	}),
+        fields: combineFields(Organization.fields, Place.fields, {
+            branchOf: "Organization",
+            currenciesAccepted: "Text",
+            openingHours: "Duration",
+            paymentAccepted: "Text",
+            priceRange: "Text"
+        }),
         isA: ["Thing", "Organization", "LocalBusiness"],
         itemTypeURL: "http://schema.org/LocalBusiness"    
     },
     AnimalShelter = exports.AnimalShelter = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AnimalShelter"],
         itemTypeURL: "http://schema.org/AnimalShelter"    
     },
     AutomotiveBusiness = exports.AutomotiveBusiness = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness"],
         itemTypeURL: "http://schema.org/AutomotiveBusiness"    
     },
     AutoBodyShop = exports.AutoBodyShop = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "AutoBodyShop"],
         itemTypeURL: "http://schema.org/AutoBodyShop"    
     },
     AutoDealer = exports.AutoDealer = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "AutoDealer"],
         itemTypeURL: "http://schema.org/AutoDealer"    
     },
     AutoPartsStore = exports.AutoPartsStore = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "Store", "AutoPartsStore"],
         itemTypeURL: "http://schema.org/AutoPartsStore"    
     },
     AutoRental = exports.AutoRental = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "AutoRental"],
         itemTypeURL: "http://schema.org/AutoRental"    
     },
     AutoRepair = exports.AutoRepair = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "AutoRepair"],
         itemTypeURL: "http://schema.org/AutoRepair"    
     },
     AutoWash = exports.AutoWash = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "AutoWash"],
         itemTypeURL: "http://schema.org/AutoWash"    
     },
     GasStation = exports.GasStation = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "GasStation"],
         itemTypeURL: "http://schema.org/GasStation"    
     },
     MotorcycleDealer = exports.MotorcycleDealer = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "MotorcycleDealer"],
         itemTypeURL: "http://schema.org/MotorcycleDealer"    
     },
     MotorcycleRepair = exports.MotorcycleRepair = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "MotorcycleRepair"],
         itemTypeURL: "http://schema.org/MotorcycleRepair"    
     },
     ChildCare = exports.ChildCare = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "ChildCare"],
         itemTypeURL: "http://schema.org/ChildCare"    
     },
     DryCleaningOrLaundry = exports.DryCleaningOrLaundry = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "DryCleaningOrLaundry"],
         itemTypeURL: "http://schema.org/DryCleaningOrLaundry"    
     },
     EmergencyService = exports.EmergencyService = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EmergencyService"],
         // FIXME: Do we need a child list? PoliceStation, FireStation, Hospital are linked from Emergency Service but are defined under CivicStructure and MedicalOrganization
         itemTypeURL: "http://schema.org/EmergencyService"    
     },
     FireStation = exports.FireStation = {
-    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
         isA: ["Thing", "Organization", "LocalBusiness", "CivicStructure","FireStation"],
         itemTypeURL: "http://schema.org/FireStation"    
     },
     Hospital = exports.Hospital = {
-    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
         isA: ["Thing", "Organization", "LocalBusiness", "MedicalOrganization","FireStation"],
         itemTypeURL: "http://schema.org/Hospital"    
     },
     PoliceStation = exports.PoliceStation = {
-    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
         isA: ["Thing", "Organization", "LocalBusiness", "CivicStructure", "PoliceStation"],
         itemTypeURL: "http://schema.org/PoliceStation"    
     },
     EmploymentAgency = exports.EmploymentAgency = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EmploymentAgency"],
         itemTypeURL: "http://schema.org/EmploymentAgency"    
     },
     EntertainmentBusiness = exports.EntertainmentBusiness = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness"],
         itemTypeURL: "http://schema.org/EntertainmentBusiness"    
     },
     AdultEntertainment = exports.AdultEntertainment = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "AdultEntertainment"],
         itemTypeURL: "http://schema.org/AdultEntertainment"    
     },
     AmusementPark = exports.AmusementPark = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "AmusementPark"],
         itemTypeURL: "http://schema.org/AmusementPark"    
     },
     ArtGallery = exports.ArtGallery = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
    		isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "ArtGallery"],
         itemTypeURL: "http://schema.org/ArtGallery"    
     },
     Casino = exports.Casino = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "Casino"],
         itemTypeURL: "http://schema.org/Casino"    
     },
     ComedyClub = exports.ComedyClub = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "ComedyClub"],
         itemTypeURL: "http://schema.org/ComedyClub"    
     },
     MovieTheater = exports.MovieTheater = {
-    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
         isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "MovieTheater"],
         itemTypeURL: "http://schema.org/MovieTheater"    
     },
     NightClub = exports.NightClub = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "NightClub"],
         itemTypeURL: "http://schema.org/NightClub"    
     },
     FinancialService = exports.FinancialService = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FinancialService"],
         itemTypeURL: "http://schema.org/FinancialService"    
     },
     AccountingService = exports.AccountingService = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "AccountingService"],
         itemTypeURL: "http://schema.org/AccountingService"    
     },
     AutomatedTeller = exports.AutomatedTeller = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "AutomatedTeller"],
         itemTypeURL: "http://schema.org/AutomatedTeller"    
     },
     BankOrCreditUnion = exports.BankOrCreditUnion = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "BankOrCreditUnion"],
         itemTypeURL: "http://schema.org/BankOrCreditUnion"    
     },
     InsuranceAgency = exports.InsuranceAgency = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "InsuranceAgency"],
         itemTypeURL: "http://schema.org/InsuranceAgency"    
     },
     FoodEstablishment = exports.FoodEstablishment = {
-    	fields: combineFields(LocalBusiness.fields, {
-    		acceptsReservations: "Text||URL",
-    		menu: "Text||URL",
-    		servesCuisine: "Text"
-    	}),
+        fields: combineFields(LocalBusiness.fields, {
+            acceptsReservations: "Text||URL",
+            menu: "Text||URL",
+            servesCuisine: "Text"
+        }),
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment"],
         itemTypeURL: "http://schema.org/FoodEstablishment"    
     },
     Bakery = exports.Bakery = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Bakery"],
         itemTypeURL: "http://schema.org/FoodEstablishment"    
     },
     BarOrPub = exports.BarOrPub = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "BarOrPub"],
         itemTypeURL: "http://schema.org/BarOrPub"    
     },
     Brewery = exports.Brewery = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Brewery"],
         itemTypeURL: "http://schema.org/Brewery"    
     },
     CafeOrCoffeeShop = exports.CafeOrCoffeeShop = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "CafeOrCoffeeShop"],
         itemTypeURL: "http://schema.org/CafeOrCoffeeShop"    
     },
     FastFoodRestaurant = exports.FastFoodRestaurant = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "FastFoodRestaurant"],
         itemTypeURL: "http://schema.org/FastFoodRestaurant"    
     },
     IceCreamShop = exports.IceCreamShop = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "IceCreamShop"],
         itemTypeURL: "http://schema.org/IceCreamShop"    
     },
     Restaurant = exports.Restaurant = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Restaurant"],
         itemTypeURL: "http://schema.org/Restaurant"    
     },
     Winery = exports.Winery = {
-    	fields: FoodEstablishment.fields,
+        fields: FoodEstablishment.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Winery"],
         itemTypeURL: "http://schema.org/Winery"    
     },
     GovernmentOffice = exports.GovernmentOffice = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "GovernmentOffice"],
         itemTypeURL: "http://schema.org/GovernmentOffice"    
     },
     PostOffice = exports.PostOffice = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "GovernmentOffice", "PostOffice"],
         itemTypeURL: "http://schema.org/PostOffice"    
     },
     HealthAndBeautyBusiness = exports.HealthAndBeautyBusiness = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness"],
         itemTypeURL: "http://schema.org/HealthAndBeautyBusiness"    
     },
     BeautySalon = exports.BeautySalon = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "BeautySalon"],
         itemTypeURL: "http://schema.org/BeautySalon"    
     },
     DaySpa = exports.DaySpa = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "DaySpa"],
         itemTypeURL: "http://schema.org/DaySpa"    
     },
     HairSalon = exports.HairSalon = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "HairSalon"],
         itemTypeURL: "http://schema.org/HairSalon"    
     },
     HealthClub = exports.HealthClub = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "HealthClub"],
         itemTypeURL: "http://schema.org/HealthClub"    
     },
     NailSalon = exports.NailSalon = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "NailSalon"],
         itemTypeURL: "http://schema.org/NailSalon"    
     },
     TattooParlor = exports.TattooParlor = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "TattooParlor"],
         itemTypeURL: "http://schema.org/TattooParlor"    
     },
     HomeAndConstructionBusiness = exports.HomeAndConstructionBusiness = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness"],
         itemTypeURL: "http://schema.org/HomeAndConstructionBusiness"    
     },
     Electrician = exports.Electrician = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","Electrician"],
         itemTypeURL: "http://schema.org/Electrician"    
     },
     GeneralContractor = exports.GeneralContractor = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","GeneralContractor"],
         itemTypeURL: "http://schema.org/GeneralContractor"    
     },
     HVACBusiness = exports.HVACBusiness = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","HVACBusiness"],
         itemTypeURL: "http://schema.org/HVACBusiness"    
     },
     HousePainter = exports.HousePainter = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","HousePainter"],
         itemTypeURL: "http://schema.org/HousePainter"    
     },
     Locksmith = exports.Locksmith = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","Locksmith"],
         itemTypeURL: "http://schema.org/Locksmith"    
     },
     MovingCompany = exports.MovingCompany = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","MovingCompany"],
         itemTypeURL: "http://schema.org/MovingCompany"    
     },
     Plumber = exports.Plumber = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","Plumber"],
         itemTypeURL: "http://schema.org/Plumber"    
     },
     RoofingContractor = exports.RoofingContractor = {
-    	fields: LocalBusiness.fields,
+        fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","RoofingContractor"],
         itemTypeURL: "http://schema.org/RoofingContractor"    
     },
@@ -1831,8 +2116,48 @@ var Thing = exports.Thing = {
         fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "Store", "WholesaleStore"],
         itemTypeURL: "http://schema.org/WholesaleStore"
-    };// 
-    
+    },
+    TelevisionStation = exports.TelevisionStation = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "TelevisionStation"],
+        itemTypeURL: "http://schema.org/TelevisionStation"
+    },
+    TouristInformationCenter = exports.TouristInformationCenter = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "TouristInformationCenter"],
+        itemTypeURL: "http://schema.org/TouristInformationCenter"
+    },
+    TravelAgency = exports.TravelAgency = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "TravelAgency"],
+        itemTypeURL: "http://schema.org/TravelAgency"
+    },
+    NGO = exports.NGO = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "NGO"],
+        itemTypeURL: "http://schema.org/NGO"
+    },
+    PerformingGroup = exports.PerformingGroup = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "PerformingGroup"],
+        itemTypeURL: "http://schema.org/PerformingGroup"
+    },
+    DanceGroup = exports.DanceGroup = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "PerformingGroup", "DanceGroup"],
+        itemTypeURL: "http://schema.org/DanceGroup"
+    },
+    TheaterGroup = exports.TheaterGroup = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "PerformingGroup", "TheaterGroup"],
+        itemTypeURL: "http://schema.org/TheaterGroup"
+    },
+    SportsTeam = exports.SportsTeam = {
+        fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "SportsTeam"],
+        itemTypeURL: "http://schema.org/SportsTeam"
+    };
+
 // FIXME: Need to figure out browser/MongoDB Shell
 // equivalent of NodeJS' exports.
 Object.keys(exports).forEach(function (item) {
