@@ -559,6 +559,11 @@ var Thing = exports.Thing = {
         isA: ["Thing", "Place"],
         itemTypeURL: "http://schema.org/Place"    	
     },
+    CivicStructure = exports.CivicStructure = {
+    	fields: combineFields(Place.fields, {openingHours: "Duration"}),
+        isA: ["Thing", "Place", "CivicStructure"],
+        itemTypeURL: "http://schema.org/CivicStructure"
+    },
     Product = exports.Product = {
     	fields: combineFields(Thing.fields, {
     		aggregateRating: "AggregateRating",
@@ -1217,7 +1222,7 @@ var Thing = exports.Thing = {
         itemTypeURL: "http://schema.org/GovernmentOrganization"    
     },
     LocalBusiness = exports.LocalBusiness = {
-    	fields: combineFields(Organization.fields, {
+    	fields: combineFields(Organization.fields, Place.fields, {
     		branchOf: "Organization",
     		currenciesAccepted: "Text",
     		openingHours: "Duration",
@@ -1281,11 +1286,253 @@ var Thing = exports.Thing = {
     	fields: LocalBusiness.fields,
         isA: ["Thing", "Organization", "LocalBusiness", "AutomotiveBusiness", "MotorcycleRepair"],
         itemTypeURL: "http://schema.org/MotorcycleRepair"    
+    },
+    ChildCare = exports.ChildCare = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "ChildCare"],
+        itemTypeURL: "http://schema.org/ChildCare"    
+    },
+    DryCleaningOrLaundry = exports.DryCleaningOrLaundry = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "DryCleaningOrLaundry"],
+        itemTypeURL: "http://schema.org/DryCleaningOrLaundry"    
+    },
+    EmergencyService = exports.EmergencyService = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EmergencyService"],
+        // FIXME: Do we need a child list? PoliceStation, FireStation, Hospital are linked from Emergency Service but are defined under CivicStructure and MedicalOrganization
+        itemTypeURL: "http://schema.org/EmergencyService"    
+    },
+    FireStation = exports.FireStation = {
+    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        isA: ["Thing", "Organization", "LocalBusiness", "CivicStructure","FireStation"],
+        itemTypeURL: "http://schema.org/FireStation"    
+    },
+    Hospital = exports.Hospital = {
+    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        isA: ["Thing", "Organization", "LocalBusiness", "MedicalOrganization","FireStation"],
+        itemTypeURL: "http://schema.org/Hospital"    
+    },
+    PoliceStation = exports.PoliceStation = {
+    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        isA: ["Thing", "Organization", "LocalBusiness", "CivicStructure", "PoliceStation"],
+        itemTypeURL: "http://schema.org/PoliceStation"    
+    },
+    EmploymentAgency = exports.EmploymentAgency = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EmploymentAgency"],
+        itemTypeURL: "http://schema.org/EmploymentAgency"    
+    },
+    EntertainmentBusiness = exports.EntertainmentBusiness = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness"],
+        itemTypeURL: "http://schema.org/EntertainmentBusiness"    
+    },
+    AdultEntertainment = exports.AdultEntertainment = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "AdultEntertainment"],
+        itemTypeURL: "http://schema.org/AdultEntertainment"    
+    },
+    AmusementPark = exports.AmusementPark = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "AmusementPark"],
+        itemTypeURL: "http://schema.org/AmusementPark"    
+    },
+    ArtGallery = exports.ArtGallery = {
+    	fields: LocalBusiness.fields,
+   		isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "ArtGallery"],
+        itemTypeURL: "http://schema.org/ArtGallery"    
+    },
+    Casino = exports.Casino = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "Casino"],
+        itemTypeURL: "http://schema.org/Casino"    
+    },
+    ComedyClub = exports.ComedyClub = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "ComedyClub"],
+        itemTypeURL: "http://schema.org/ComedyClub"    
+    },
+    MovieTheater = exports.MovieTheater = {
+    	fields: combineFields(LocalBusiness.fields, CivicStructure.fields),
+        isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "MovieTheater"],
+        itemTypeURL: "http://schema.org/MovieTheater"    
+    },
+    NightClub = exports.NightClub = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "EntertainmentBusiness", "NightClub"],
+        itemTypeURL: "http://schema.org/NightClub"    
+    },
+    FinancialService = exports.FinancialService = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FinancialService"],
+        itemTypeURL: "http://schema.org/FinancialService"    
+    },
+    AccountingService = exports.AccountingService = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "AccountingService"],
+        itemTypeURL: "http://schema.org/AccountingService"    
+    },
+    AutomatedTeller = exports.AutomatedTeller = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "AutomatedTeller"],
+        itemTypeURL: "http://schema.org/AutomatedTeller"    
+    },
+    BankOrCreditUnion = exports.BankOrCreditUnion = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "BankOrCreditUnion"],
+        itemTypeURL: "http://schema.org/BankOrCreditUnion"    
+    },
+    InsuranceAgency = exports.InsuranceAgency = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FinancialService", "InsuranceAgency"],
+        itemTypeURL: "http://schema.org/InsuranceAgency"    
+    },
+    FoodEstablishment = exports.FoodEstablishment = {
+    	fields: combineFields(LocalBusiness.fields, {
+    		acceptsReservations: "Text||URL",
+    		menu: "Text||URL",
+    		servesCuisine: "Text"
+    	}),
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment"],
+        itemTypeURL: "http://schema.org/FoodEstablishment"    
+    },
+    Bakery = exports.Bakery = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Bakery"],
+        itemTypeURL: "http://schema.org/FoodEstablishment"    
+    },
+    BarOrPub = exports.BarOrPub = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "BarOrPub"],
+        itemTypeURL: "http://schema.org/BarOrPub"    
+    },
+    Brewery = exports.Brewery = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Brewery"],
+        itemTypeURL: "http://schema.org/Brewery"    
+    },
+    CafeOrCoffeeShop = exports.CafeOrCoffeeShop = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "CafeOrCoffeeShop"],
+        itemTypeURL: "http://schema.org/CafeOrCoffeeShop"    
+    },
+    FastFoodRestaurant = exports.FastFoodRestaurant = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "FastFoodRestaurant"],
+        itemTypeURL: "http://schema.org/FastFoodRestaurant"    
+    },
+    IceCreamShop = exports.IceCreamShop = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "IceCreamShop"],
+        itemTypeURL: "http://schema.org/IceCreamShop"    
+    },
+    Restaurant = exports.Restaurant = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Restaurant"],
+        itemTypeURL: "http://schema.org/Restaurant"    
+    },
+    Winery = exports.Winery = {
+    	fields: FoodEstablishment.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "FoodEstablishment", "Winery"],
+        itemTypeURL: "http://schema.org/Winery"    
+    },
+    GovernmentOffice = exports.GovernmentOffice = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "GovernmentOffice"],
+        itemTypeURL: "http://schema.org/GovernmentOffice"    
+    },
+    PostOffice = exports.PostOffice = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "GovernmentOffice", "PostOffice"],
+        itemTypeURL: "http://schema.org/PostOffice"    
+    },
+    HealthAndBeautyBusiness = exports.HealthAndBeautyBusiness = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness"],
+        itemTypeURL: "http://schema.org/HealthAndBeautyBusiness"    
+    },
+    BeautySalon = exports.BeautySalon = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "BeautySalon"],
+        itemTypeURL: "http://schema.org/BeautySalon"    
+    },
+    DaySpa = exports.DaySpa = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "DaySpa"],
+        itemTypeURL: "http://schema.org/DaySpa"    
+    },
+    HairSalon = exports.HairSalon = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "HairSalon"],
+        itemTypeURL: "http://schema.org/HairSalon"    
+    },
+    HealthClub = exports.HealthClub = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "HealthClub"],
+        itemTypeURL: "http://schema.org/HealthClub"    
+    },
+    NailSalon = exports.NailSalon = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "NailSalon"],
+        itemTypeURL: "http://schema.org/NailSalon"    
+    },
+    TattooParlor = exports.TattooParlor = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HealthAndBeautyBusiness", "TattooParlor"],
+        itemTypeURL: "http://schema.org/TattooParlor"    
+    },
+    HomeAndConstructionBusiness = exports.HomeAndConstructionBusiness = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness"],
+        itemTypeURL: "http://schema.org/HomeAndConstructionBusiness"    
+    },
+    Electrician = exports.Electrician = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","Electrician"],
+        itemTypeURL: "http://schema.org/Electrician"    
+    },
+    GeneralContractor = exports.GeneralContractor = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","GeneralContractor"],
+        itemTypeURL: "http://schema.org/GeneralContractor"    
+    },
+    HVACBusiness = exports.HVACBusiness = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","HVACBusiness"],
+        itemTypeURL: "http://schema.org/HVACBusiness"    
+    },
+    HousePainter = exports.HousePainter = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","HousePainter"],
+        itemTypeURL: "http://schema.org/HousePainter"    
+    },
+    Locksmith = exports.Locksmith = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","Locksmith"],
+        itemTypeURL: "http://schema.org/Locksmith"    
+    },
+    MovingCompany = exports.MovingCompany = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","MovingCompany"],
+        itemTypeURL: "http://schema.org/MovingCompany"    
+    },
+    Plumber = exports.Plumber = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","Plumber"],
+        itemTypeURL: "http://schema.org/Plumber"    
+    },
+    RoofingContractor = exports.RoofingContractor = {
+    	fields: LocalBusiness.fields,
+        isA: ["Thing", "Organization", "LocalBusiness", "HomeAndConstructionBusiness","RoofingContractor"],
+        itemTypeURL: "http://schema.org/RoofingContractor"    
     };
     
 // FIXME: Need to figure out browser/MongoDB Shell
 // equivalent of NodeJS' exports.
 Object.keys(exports).forEach(function (item) {
-	exports[item].create = create;
-	exports[item].toHandlebars = toHandlebars;
+	if (exports[item].fields !== undefined) {
+		exports[item].create = create;
+		exports[item].toHandlebars = toHandlebars;
+	}
 });
