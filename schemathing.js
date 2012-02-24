@@ -27,6 +27,7 @@
 var url = require('url'),
 	mote = require('mote');
 
+(function () {
 //
 // FIXME: Need to make ObjectIds, LastObjectId and NewObjectId conditionally defined
 // so this will work in MongoDB's shell
@@ -117,6 +118,170 @@ var DataType = {
 	}
 };
 
+
+// These methods are the common across schemething
+var equal = function (obj) {
+    return isOp(this, obj, '==');	
+};
+
+var strictEqual = function (obj) {
+	return isOp(this, obj, '===');
+};
+
+var notEqual = function (obj) {
+	return isOp(this, obj, '!=');
+};
+
+var notStrictEqual = function (obj) {
+	return isOp(this, obj, '!==');
+};
+
+// obj has the same non-function, non-_id properties as self
+var isSimilar = function (obj) {
+	var self = this, result = true;
+
+	Object.keys(self).forEach(function (ky) {
+		if (result === true && 
+			ky !== "_id" &&
+			ky !== "_isA" &&
+			typeof self[ky] !== "function") {
+			if (obj[ky] === undefined) {
+				result = false;
+			}
+		}
+	});
+	return result;
+};
+
+// all properties are in common
+var strictIsSimilar = function (obj) {
+	var self = this, result = true;
+
+	Object.keys(self).concat(Object.keys(obj)).forEach(function (ky) {
+		if (result === true) {
+			if (typeof self[ky] !== typeof obj[ky]) {
+				result = false;
+			}
+		}
+	});
+	return result;
+};
+
+// An SchemaThing object factory.
+var create = function (defaults) {
+    var newThing = {}, self = this;
+    Object.keys(self.fields).forEach(function (ky) {
+        newThing[ky] = self.fields[ky];
+    });
+	if (defaults === undefined || defaults._id === undefined) {
+		newThing._id = NewObjectId();
+	}
+    newThing._isA = this.isA;
+    newThing.toHTML = function (options) {
+        var template = mote.compile(self.toHandlebars(options));
+        return template(this);
+    };
+    newThing.toJSON = function () {
+        var obj = {}, newSelf = this;
+        Object.keys(self.fields).forEach(function (ky) {
+            obj[ky] = newSelf[ky];
+        });
+        return JSON.stringify(obj);
+    };
+	return Assemble(newThing, defaults);
+};
+
+// Create a copy of current object with new object id
+var clone = function () {
+	var newObject = { _id: NewObjectId() }, self = this;
+	Object.keys(self).forEach(function(ky) {
+		if (ky === '_id') {
+            // Skip, never clone an Id.
+		} else {
+			newObject[ky] = self[ky];
+		}
+	});
+	return newObject;
+};
+
+// Update existing properties from value in another object
+var update = function(obj) {
+	var self = this;
+	Object.keys(obj).forEach(function (ky) {
+		if (ky !== "_id" && ky !== "_isA" && self[ky] !== undefined) {
+			self[ky] = obj[ky];
+		}
+	});
+	return true;
+};
+
+// Absorb the properties from a new object without overwriting the existing properties
+var absorb = function (obj) {
+	var self = this;
+	Object.keys(obj).forEach(function (ky) {
+		if (ky === "_id") {
+			// skip
+		} else if (ky === "_isA" && obj._isA !== undefined) {
+            obj._isA.forEach(function (item) {
+                if (self._isA.indexOf(item) < 0) {
+                    self._isA.push(item);
+                }
+            });
+		} else if (self[ky] === undefined) {
+			self[ky] = obj[ky];
+		}
+	});
+	return true;
+};
+
+// Morph - Update existing properties and add any additoinal properties from the other object 
+var morph = function (obj) {
+	var self = this;
+	Object.keys(obj).forEach(function (ky) {
+		if (ky === "_id") {
+			// skip
+        } else if (ky === "_isA" && obj._isA !== undefined) {
+            obj._isA.forEach(function (item) {
+                if (self._isA.indexOf(item) < 0) {
+                    self._isA.push(item);
+                }
+            });
+		} else {
+			self[ky] = obj[ky];
+		}
+	});
+	return true;
+};
+
+
+// defaults are presumed to be the usual JS object
+var Assemble = function(schemaThing, defaults) {
+	if (defaults !== undefined) {
+		Object.keys(defaults).forEach(function(ky) {
+			schemaThing[ky] = defaults[ky];
+		});
+	}
+
+	if (schemaThing._id === undefined) {
+		schemaThing._id = NewObjectId();
+	}
+	if (schemaThing.name === "") {
+		schemaThing.name = "schemathing_" + schemaThing._id;
+	}
+	// Attach Thing methods to the new object
+    schemaThing.create = create;
+	schemaThing.clone = clone;
+	schemaThing.equal = equal;
+	schemaThing.isSimilar = isSimilar;
+	schemaThing.strictIsSimilar = strictIsSimilar;
+	schemaThing.notEqual = notEqual;
+	schemaThing.strictEqual = strictEqual;
+	schemaThing.notStrictEqual = notStrictEqual;
+	schemaThing.update = update;
+	schemaThing.absorb = absorb;
+	schemaThing.morph = morph;
+	return schemaThing;
+};
 
 // Options is any additional array attribute strings for outer div
 // E.g. ['class="myclass"','id="my_id"','editable']
@@ -259,173 +424,104 @@ var Thing = {
         }),
         isA: ["Thing", "CreativeWork", "Book"],
         itemTypeURL: "http://schema.org/Book"
+    },
+    ItemList = {
+        fields: combineFields(CreativeWork.fields, {
+            itemListElement: "Text",
+            itemListOrder: "Text"
+        }),
+        isA: ["Thing", "CreativeWork", "ItemList"],
+        itemTypeURL: "http://schema.org/ItemList"
+    },
+    Map = {
+        fields: CreativeWork.fields,
+        isA: ["Thing", "CreativeWork", "Map"],
+        itemTypeURL: "http://schema.org/Map"
+    },
+    MediaObject = {
+        fields: combineFields(CreativeWork.fields,{
+            associatedArticle: "NewsArticle",
+            bitrate: "Text",
+            contentSize: "Text",
+            contentURL: "URL",
+            duration: "Duration",
+            embedURL: "URL",
+            encodesCreativeWork: "CreativeWork",
+            encodingFormat: "Text",
+            expires: "Date",
+            height: "Distance",
+            playerType: "Text",
+            regionsAllowed: "Place",
+            requiresSubscription: "Boolean",
+            uploadDate: "Date",
+            width: "Distance"
+        }),
+        isA: ["Thing", "CreativeWork", "MediaObject"],
+        itemTypeURL: "http://schema.org/MediaObject"
+    },
+    AudioObject = {
+        fields: combineFields(MediaObject.fields,{
+            transcript: "Text"
+        }),
+        isA: ["Thing", "CreativeWork", "MediaObject", "AudioObject"],
+        itemTypeURL: "http://schema.org/AudioObject"
+    },
+    ImageObject = {
+        fields: combineFields(MediaObject.fields,{
+            caption: "Text",
+            exifData: "Text",
+            representativeOfPage: "Boolean",
+            thumbnail: "ImageObject"
+        }),
+        isA: ["Thing", "CreativeWork", "MediaObject", "ImageObject"],
+        itemTypeURL: "http://schema.org/ImageObject"
+    },
+    MusicVideoObject = {
+        fields: MediaObject.fields,
+        isA: ["Thing", "CreativeWork", "MediaObject", "MusicVideoObject"],
+        itemTypeURL: "http://schema.org/MusicVideoObject"
+    },
+    VideoObject = {
+        fields: combineFields(MediaObject.fields, {
+            caption: "Text",
+            productionCompany: "Organization",
+            thumbnail: "ImageObject",
+            transcript: "Text",
+            videoFrameSize: "Text",
+            videoQuality: "Text"
+        }),
+        isA: ["Thing", "CreativeWork", "MediaObject", "VideoObject"],
+        itemTypeURL: "http://schema.org/VideoObject"
+    },
+    Movie = {
+        fields: combineFields(CreativeWork.fields, {
+            actors: "Person", 
+            director: "Person", 
+            duration: "Duration",
+            musicBy: "Person||MusicGroup",
+            producer: "Person",
+            productionCompany: "Organization",
+            trailer: "VideoObject"
+        }),
+        isA: ["Thing", "CreativeWork", "Movie"],
+        itemTypeURL: "http://schema.org/Movie"        
+    },
+    MusicPlayList = {
+        fields: combineFields(CreativeWork.fields, {
+            numTracks: "Integer",
+            tracks: "MusicRecording"
+        }),
+        isA: ["Thing", "CreativeWork", "MusicPlayList"],
+        itemTypeURL: "http://schema.org/MusicPlayList"
+    },
+    MusicAlbum = {
+        fields: combineFields(MusicPlayList.fields, {
+            byArtist: "MusicGroup"
+        }),
+        isA: ["Thing", "CreativeWork", "MusicPlayList", "MusicAlbum"],
+        itemTypeURL: "http://schema.org/MusicAlbum"
     };
     
-
-// These methods are the common across schemething
-var equal = function (obj) {
-	return isOp(this, obj, '==');	
-};
-
-var strictEqual = function (obj) {
-	return isOp(this, obj, '===');
-};
-
-var notEqual = function (obj) {
-	return isOp(this, obj, '!=');
-};
-
-var notStrictEqual = function (obj) {
-	return isOp(this, obj, '!==');
-};
-
-// obj has the same non-function, non-_id properties as self
-var isSimilar = function (obj) {
-	var self = this, result = true;
-
-	Object.keys(self).forEach(function (ky) {
-		if (result === true && 
-			ky !== "_id" &&
-			ky !== "_isA" &&
-			typeof self[ky] !== "function") {
-			if (obj[ky] === undefined) {
-				result = false;
-			}
-		}
-	});
-	return result;
-};
-
-// all properties are in common
-var strictIsSimilar = function (obj) {
-	var self = this, result = true;
-
-	Object.keys(self).concat(Object.keys(obj)).forEach(function (ky) {
-		if (result === true) {
-			if (typeof self[ky] !== typeof obj[ky]) {
-				result = false;
-			}
-		}
-	});
-	return result;
-};
-
-// An SchemaThing object factory.
-var create = function (defaults) {
-    var newThing = {}, self = this;
-    Object.keys(self.fields).forEach(function (ky) {
-        newThing[ky] = self.fields[ky];
-    });
-	if (defaults === undefined || defaults._id === undefined) {
-		newThing._id = NewObjectId();
-	}
-    newThing._isA = this.isA;
-    newThing.toHTML = function (options) {
-    	var template = mote.compile(self.toHandlebars(options));
-    	return template(this);
-    };
-    newThing.toJSON = function () {
-    	var obj = {}, newSelf = this;
-    	Object.keys(self.fields).forEach(function (ky) {
-    		obj[ky] = newSelf[ky];
-    	});
-    	return JSON.stringify(obj);
-    };
-	return Assemble(newThing, defaults);
-};
-
-// Create a copy of current object with new object id
-var clone = function () {
-	var newObject = { _id: NewObjectId() }, self = this;
-	Object.keys(self).forEach(function(ky) {
-		if (ky === '_id') {
-            // Skip, never clone an Id.
-		} else {
-			newObject[ky] = self[ky];
-		}
-	});
-	return newObject;
-};
-
-// Update existing properties from value in another object
-var update = function(obj) {
-	var self = this;
-	Object.keys(obj).forEach(function (ky) {
-		if (ky !== "_id" && ky !== "_isA" && self[ky] !== undefined) {
-			self[ky] = obj[ky];
-		}
-	});
-	return true;
-};
-
-// Absorb the properties from a new object without overwriting the existing properties
-var absorb = function (obj) {
-	var self = this;
-	Object.keys(obj).forEach(function (ky) {
-		if (ky === "_id") {
-			// skip
-		} else if (ky === "_isA" && obj._isA !== undefined) {
-            obj._isA.forEach(function (item) {
-                if (self._isA.indexOf(item) < 0) {
-                    self._isA.push(item);
-                }
-            });
-		} else if (self[ky] === undefined) {
-			self[ky] = obj[ky];
-		}
-	});
-	return true;
-};
-
-// Morph - Update existing properties and add any additoinal properties from the other object 
-var morph = function (obj) {
-	var self = this;
-	Object.keys(obj).forEach(function (ky) {
-		if (ky === "_id") {
-			// skip
-        } else if (ky === "_isA" && obj._isA !== undefined) {
-            obj._isA.forEach(function (item) {
-                if (self._isA.indexOf(item) < 0) {
-                    self._isA.push(item);
-                }
-            });
-		} else {
-			self[ky] = obj[ky];
-		}
-	});
-	return true;
-};
-
-
-// defaults are presumed to be the usual JS object
-var Assemble = function(schemaThing, defaults) {
-	if (defaults !== undefined) {
-		Object.keys(defaults).forEach(function(ky) {
-			schemaThing[ky] = defaults[ky];
-		});
-	}
-
-	if (schemaThing._id === undefined) {
-		schemaThing._id = NewObjectId();
-	}
-	if (schemaThing.name === "") {
-		schemaThing.name = "schemathing_" + schemaThing._id;
-	}
-	// Attach Thing methods to the new object
-    schemaThing.create = create;
-	schemaThing.clone = clone;
-	schemaThing.equal = equal;
-	schemaThing.isSimilar = isSimilar;
-	schemaThing.strictIsSimilar = strictIsSimilar;
-	schemaThing.notEqual = notEqual;
-	schemaThing.strictEqual = strictEqual;
-	schemaThing.notStrictEqual = notStrictEqual;
-	schemaThing.update = update;
-	schemaThing.absorb = absorb;
-	schemaThing.morph = morph;
-	return schemaThing;
-};
-
 // FIXME: Need to figure out browser/MongoDB Shell
 // equivalent of NodeJS' exports.
 exports.Assemble = Assemble;
@@ -456,3 +552,40 @@ exports.Blog.toHandlebars = toHandlebars;
 exports.Book = Book;
 exports.Book.create = create;
 exports.Book.toHandlebars = toHandlebars;
+exports.ItemList = ItemList;
+exports.ItemList.create = create;
+exports.ItemList.toHandlebars = toHandlebars;
+exports.Map = Map;
+exports.Map.create = create;
+exports.Map.toHandlebars = toHandlebars;
+exports.MediaObject = MediaObject;
+exports.MediaObject.create = create;
+exports.MediaObject.toHandlebars = toHandlebars;
+exports.AudioObject = AudioObject;
+exports.AudioObject.create = create;
+exports.AudioObject.toHandlebars = toHandlebars;
+exports.ImageObject = ImageObject;
+exports.ImageObject.create = create;
+exports.ImageObject.toHandlebars = toHandlebars;
+exports.MusicVideoObject = MusicVideoObject;
+exports.MusicVideoObject.create = create;
+exports.MusicVideoObject.toHandlebars = toHandlebars;
+exports.VideoObject = VideoObject;
+exports.VideoObject.create = create;
+exports.VideoObject.toHandlebars = toHandlebars;
+exports.Movie = Movie;
+exports.Movie.create = create;
+exports.Movie.toHandlebars = toHandlebars;
+exports.MusicPlayList = MusicPlayList;
+exports.MusicPlayList.create = create;
+exports.MusicPlayList.toHandlebars = toHandlebars;
+exports.MusicAlbum = MusicAlbum;
+exports.MusicAlbum.create = create;
+exports.MusicAlbum.toHandlebars = toHandlebars;
+/*
+exports.MusicGroup = MusicGroup;
+exports.MusicGroup.create = create;
+exports.MusicGroup.toHandlebars = toHandlebars;
+*/
+
+}());
