@@ -11,10 +11,10 @@
 //
 
 // Create a global object for use in browser, export for NodeJS
-ObjectIds = (function () {
+(function () {
 	var global = this;
 
-	create = function (host_ip) {
+	var create = function (host_ip) {
 		var self = {};
 
 		// 4 byte from Unix Timestamp
@@ -41,10 +41,10 @@ ObjectIds = (function () {
 		// 3 byte counter
 		self._inc = 0;
 
-		lastId = function () {
+		var lastId = function () {
 			return this._inc;
 		};
-		newId = function () {
+		var newId = function () {
 			this._inc = (this._inc + 1) % 8;
 			return this._inc;
 		};
@@ -55,8 +55,8 @@ ObjectIds = (function () {
 	};
 
 	if (exports === undefined) {
-		global.create = create; 		
-	} else {
+        global.create = create;
+    } else {
 		exports.create = create;
-	};
+    }
 }());
